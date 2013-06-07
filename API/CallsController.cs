@@ -9,7 +9,8 @@ namespace TwilioEmulator.API
         public Call Post(CallOptions c)
         {
             SystemController.Instance.LogObjectDump((object)c, "Call");
-            return new Call();
+            var cl = SystemController.Instance.CreateNewInboudCall(c);
+            return cl;
         }
     }
 }

@@ -5,6 +5,10 @@ using System.Web.Http;
 using System.Web.Http.SelfHost;
 using TwilioEmulator;
 using TwilioEmulator.Properties;
+using Twilio;
+using System.Net.Http.Formatting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace TwilioEmulator.Code
 {
@@ -26,13 +30,29 @@ namespace TwilioEmulator.Code
             }
         }
 
-        static SystemController()
+
+        public CallInstance CreateNewInboudCall(CallOptions co)
         {
+            CallInstance c = new CallInstance()
+            {
+                Sid = Guid.NewGuid().ToString().Replace("-", ""),
+                Status = "queued",
+                Direction = "outbound-api",
+                DateCreated = DateTime.Now.ToUniversalTime(),
+                DateUpdated = DateTime.Now.ToUniversalTime(),
+                To = co.To,
+                From = co.From,
+                subresource_uris = new Dictionary<string,string>() { 
+                { "notifications", "/2010-04-01/Accounts/AC228ba7a5fe4238be081ea6f3c44186f3/Calls/CAa346467ca321c71dbd5e12f627deb854/Notifications.json" },
+                { "recordings", "/2010-04-01/Accounts/AC228ba7a5fe4238be081ea6f3c44186f3/Calls/CAa346467ca321c71dbd5e12f627deb854/Notifications.json" }
+                }
+                
+            };
+
+            CallList.Add(c);
+            return c;
         }
 
-        private SystemController()
-        {
-        }
 
         private void StartWebServer()
         {
@@ -45,6 +65,16 @@ namespace TwilioEmulator.Code
                 id = RouteParameter.Optional
             };
             HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, name1, routeTemplate1, defaults1);
+
+            JsonMediaTypeFormatter jsonFormatter = configuration.Formatters.JsonFormatter;
+            JsonSerializerSettings jSettings = new Newtonsoft.Json.JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
+            jSettings.Converters.Add(new TwilioDateTimeConvertor());
+            jsonFormatter.SerializerSettings = jSettings;
+
             string name2 = "Direct";
             string routeTemplate2 = "2010-04-01/Accounts/{sid}/{controller}/{id}";
             object defaults2 = (object)new
@@ -87,6 +117,19 @@ namespace TwilioEmulator.Code
             StringWriter stringWriter = new StringWriter();
             ObjectDumper2.Dump(obj, name, (TextWriter)stringWriter, true);
             this.LogServerMessage(stringWriter.ToString());
+        }
+    }
+
+    public class TwilioDateTimeConvertor : DateTimeConverterBase
+    {
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return DateTime.Parse(reader.Value.ToString());
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteValue(((DateTime)value).ToString("ddd, dd MMM yyyy HH:mm:ss '+0000'"));
         }
     }
 }
