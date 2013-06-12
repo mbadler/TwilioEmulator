@@ -10,7 +10,8 @@ namespace TwilioEmulator.API.Infrastructure
     {
         public override void OnActionExecuting(HttpActionContext filterContext)
         {
-            Task.Factory.StartNew((Action)(() => SystemController.Instance.LogServerMessage(filterContext.Request.RequestUri.PathAndQuery)));
+            Task.Factory.StartNew((Action)(
+                () => SystemController.Instance.LogServerMessage(filterContext.Request.RequestUri.PathAndQuery)));
         }
     }
 }

@@ -9,18 +9,22 @@ using Twilio;
 using System.Net.Http.Formatting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using TwilioEmulator.Offices;
+
 
 namespace TwilioEmulator.Code
 {
     public class SystemController : IDisposable
     {
         private static HttpSelfHostServer server = (HttpSelfHostServer)null;
+
+        #region Static 
         private static readonly Lazy<SystemController> _instance = new Lazy<SystemController>((Func<SystemController>)(() => new SystemController()));
-        public List<CallInstance> CallList = new List<CallInstance>();
+        private static readonly Lazy<Office> _office = new Lazy<Office>((Func<Office>)(() => new Office()));
 
-        public Form1 theForm { get; set; }
+        public static bool ConsoleMode { get; set; }
 
-        public int ActivePort { get; set; }
+        public ILogger Logger { get; set; }
 
         public static SystemController Instance
         {
@@ -30,29 +34,30 @@ namespace TwilioEmulator.Code
             }
         }
 
-
-        public CallInstance CreateNewInboudCall(CallOptions co)
+        public static Office Office
         {
-            CallInstance c = new CallInstance()
+            get
             {
-                Sid = Guid.NewGuid().ToString().Replace("-", ""),
-                Status = "queued",
-                Direction = "outbound-api",
-                DateCreated = DateTime.Now.ToUniversalTime(),
-                DateUpdated = DateTime.Now.ToUniversalTime(),
-                To = co.To,
-                From = co.From,
-                subresource_uris = new Dictionary<string,string>() { 
-                { "notifications", "/2010-04-01/Accounts/AC228ba7a5fe4238be081ea6f3c44186f3/Calls/CAa346467ca321c71dbd5e12f627deb854/Notifications.json" },
-                { "recordings", "/2010-04-01/Accounts/AC228ba7a5fe4238be081ea6f3c44186f3/Calls/CAa346467ca321c71dbd5e12f627deb854/Notifications.json" }
-                }
-                
-            };
-
-            CallList.Add(c);
-            return c;
+                return SystemController._office.Value;
+            }
         }
 
+       
+
+        #endregion
+
+        public MainForm theForm { get; set; }
+
+        public int ActivePort { get; set; }
+
+        private static int _waitInterval = 1000;
+
+        public static int WaitInterval
+        {
+            get { return _waitInterval; }
+            set { _waitInterval = value; }
+        }
+        
 
         private void StartWebServer()
         {
@@ -100,6 +105,7 @@ namespace TwilioEmulator.Code
         public void StartUp()
         {
             this.StartWebServer();
+             
         }
 
         public void Dispose()
@@ -107,17 +113,9 @@ namespace TwilioEmulator.Code
             SystemController.server.Dispose();
         }
 
-        public void LogServerMessage(string Text)
-        {
-            this.theForm.LogServerMessage(Text);
-        }
+       
 
-        public void LogObjectDump(object obj, string name)
-        {
-            StringWriter stringWriter = new StringWriter();
-            ObjectDumper2.Dump(obj, name, (TextWriter)stringWriter, true);
-            this.LogServerMessage(stringWriter.ToString());
-        }
+        
     }
 
     public class TwilioDateTimeConvertor : DateTimeConverterBase

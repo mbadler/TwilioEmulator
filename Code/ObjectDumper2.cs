@@ -14,8 +14,8 @@ namespace TwilioEmulator.Code
     {
         public static void Dump(object value, string name, TextWriter writer, bool CompactMode)
         {
-            if (ObjectDumper2.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+            //if (ObjectDumper2.IsNullOrWhiteSpace(name))
+            //    throw new ArgumentNullException("name");
             if (writer == null)
                 throw new ArgumentNullException("writer");
             ObjectIDGenerator idGenerator = new ObjectIDGenerator();
