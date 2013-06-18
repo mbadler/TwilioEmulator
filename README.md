@@ -11,10 +11,26 @@ Current Status
 
   - The emulator listens fro REST Connections on port 28080
   - POSTS to calls.json (twilio.InitiateOutboundCall() with the c# helper):
-    - Request are excepted
+    - Request are accepted
     - A response indicating that the call has been queued is returned
     - The call is added to the call queue
+    - A callback is sent back to the indicated url with the status of ringing busy or no-answer
   - All requests and responses are logged
+
+Concurrent Phone Calls
+----------------------
+  The emulator is built to support many concurrent calls to many differnt numbers at the same time, however for the time bing
+  there is only one phone active - the touch tone looking thing on the main form , so you can only have one call going at a time.
+  If you make a new call request while a previous one is active you will receive a "BUSY" respone
+  
+Manual Phone Statuses
+---------------------
+  You can manually set the status you want call requests to return from the toolbar
+  
+
+
+  
+
 
 
 
@@ -23,3 +39,4 @@ Current Status
 The twilio rest client has the address to the twilio servers hard coded. To acess the emulator on local host you can use the TwilioTestClient.cs class which uses reflection to change the underlying address
 
   
+Updated 6/18/2013
