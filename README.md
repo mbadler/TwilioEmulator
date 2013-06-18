@@ -42,8 +42,20 @@ __Current Known And/or Planned Limitations__
   - No security checking at all
 
 
+__Log__
 
-
+  Logging is currently to a treeview on the main form of the emulator
+  Each request is marked with a text symbol to show the direction of the call
+  <pre>
+    () = www , [] = TwilioEmulator } = phone
+  </pre>
+  so:
+  <pre>
+    () --> []  =  Incoming rest API call
+    () <-- []  =  Outgoing Twiml request
+    [] --> }   =  Request to the phone (dial ,say ) etc...
+    [] <-- }   =  phone notifing server (digit keypress, hangup, etc...)
+  </pre>
 
 **__For developers using the .Net helper:__**
 
