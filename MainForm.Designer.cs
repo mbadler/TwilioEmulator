@@ -31,24 +31,21 @@ namespace TwilioEmulator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.trvLog = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.lblServerHeader = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.ddAnswerMode = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.ddAnswerMode = new System.Windows.Forms.ToolStripComboBox();
+            this.lblServerHeader = new System.Windows.Forms.Label();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tbKeyPad = new System.Windows.Forms.TabPage();
-            this.tbScript = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.btn1 = new System.Windows.Forms.Button();
             this.btn2 = new System.Windows.Forms.Button();
@@ -62,6 +59,11 @@ namespace TwilioEmulator
             this.btnAsterik = new System.Windows.Forms.Button();
             this.btnHash = new System.Windows.Forms.Button();
             this.btn0 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.tbScript = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -93,11 +95,9 @@ namespace TwilioEmulator
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
-            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(681, 650);
             this.splitContainer1.SplitterDistance = 324;
             this.splitContainer1.TabIndex = 0;
-            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
             // trvLog
             // 
@@ -137,26 +137,16 @@ namespace TwilioEmulator
             this.toolStripLabel1.Size = new System.Drawing.Size(246, 22);
             this.toolStripLabel1.Text = "http://localhost:18080/2010-04-01/Accounts/";
             // 
-            // lblServerHeader
+            // toolStripSeparator1
             // 
-            this.lblServerHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblServerHeader.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblServerHeader.Location = new System.Drawing.Point(0, 0);
-            this.lblServerHeader.Name = "lblServerHeader";
-            this.lblServerHeader.Size = new System.Drawing.Size(681, 14);
-            this.lblServerHeader.TabIndex = 0;
-            this.lblServerHeader.Text = "Emulator Server - Not active";
-            this.lblServerHeader.Click += new System.EventHandler(this.lblServerHeader_Click);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // label2
+            // toolStripLabel2
             // 
-            this.label2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label2.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(0, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(681, 14);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Phone";
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(103, 22);
+            this.toolStripLabel2.Text = "Call Answer Mode";
             // 
             // ddAnswerMode
             // 
@@ -166,20 +156,21 @@ namespace TwilioEmulator
             "Answer-Human",
             "Answer-Machine",
             "No Answer",
-            "Busy"});
+            "Busy",
+            "Not In Service"});
             this.ddAnswerMode.Name = "ddAnswerMode";
             this.ddAnswerMode.Size = new System.Drawing.Size(125, 25);
+            this.ddAnswerMode.SelectedIndexChanged += new System.EventHandler(this.ddAnswerMode_SelectedIndexChanged);
             // 
-            // toolStripLabel2
+            // lblServerHeader
             // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(103, 22);
-            this.toolStripLabel2.Text = "Call Answer Mode";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.lblServerHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblServerHeader.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblServerHeader.Location = new System.Drawing.Point(0, 0);
+            this.lblServerHeader.Name = "lblServerHeader";
+            this.lblServerHeader.Size = new System.Drawing.Size(681, 14);
+            this.lblServerHeader.TabIndex = 0;
+            this.lblServerHeader.Text = "Emulator Server - Not active";
             // 
             // splitContainer2
             // 
@@ -200,24 +191,6 @@ namespace TwilioEmulator
             this.splitContainer2.SplitterDistance = 328;
             this.splitContainer2.TabIndex = 2;
             // 
-            // label1
-            // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(328, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Call Log:";
-            // 
-            // label3
-            // 
-            this.label3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label3.Location = new System.Drawing.Point(0, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(349, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Phone:";
-            // 
             // richTextBox1
             // 
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -227,6 +200,15 @@ namespace TwilioEmulator
             this.richTextBox1.Size = new System.Drawing.Size(328, 295);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
+            // 
+            // label1
+            // 
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(328, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Call Log:";
             // 
             // tabControl1
             // 
@@ -250,26 +232,6 @@ namespace TwilioEmulator
             this.tbKeyPad.TabIndex = 0;
             this.tbKeyPad.Text = "Keypad";
             this.tbKeyPad.UseVisualStyleBackColor = true;
-            // 
-            // tbScript
-            // 
-            this.tbScript.Location = new System.Drawing.Point(4, 23);
-            this.tbScript.Name = "tbScript";
-            this.tbScript.Padding = new System.Windows.Forms.Padding(3);
-            this.tbScript.Size = new System.Drawing.Size(341, 343);
-            this.tbScript.TabIndex = 1;
-            this.tbScript.Text = "Script";
-            this.tbScript.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button1.Location = new System.Drawing.Point(3, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(335, 60);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Dial Number";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel1
             // 
@@ -432,6 +394,52 @@ namespace TwilioEmulator
             this.btn0.Text = "0";
             this.btn0.UseVisualStyleBackColor = true;
             // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button1.Location = new System.Drawing.Point(3, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(335, 60);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Dial Number";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // tbScript
+            // 
+            this.tbScript.Location = new System.Drawing.Point(4, 22);
+            this.tbScript.Name = "tbScript";
+            this.tbScript.Padding = new System.Windows.Forms.Padding(3);
+            this.tbScript.Size = new System.Drawing.Size(341, 269);
+            this.tbScript.TabIndex = 1;
+            this.tbScript.Text = "Script";
+            this.tbScript.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label3.Location = new System.Drawing.Point(0, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(349, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Phone:";
+            // 
+            // label2
+            // 
+            this.label2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label2.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(0, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(681, 14);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Phone";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(681, 650);
@@ -493,5 +501,6 @@ namespace TwilioEmulator
         private Button button1;
         private TabPage tbScript;
         private Label label3;
+        private ImageList imageList1;
     }
 }

@@ -7,6 +7,7 @@ using System.Security.Principal;
 using System;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace TwilioEmulator.Code
 {
@@ -21,6 +22,7 @@ namespace TwilioEmulator.Code
             ObjectIDGenerator idGenerator = new ObjectIDGenerator();
             ObjectDumper2.InternalDump(0, name, value, writer, idGenerator, true, CompactMode);
         }
+
 
         private static void InternalDump(int indentationLevel, string name, object value, TextWriter writer, ObjectIDGenerator idGenerator, bool recursiveDump, bool CompactMode)
         {
@@ -86,72 +88,71 @@ namespace TwilioEmulator.Code
                 writer.WriteLine("{0}{1}{2}{3} [{4}]{5}", (object)str1, (object)str3, (object)name, (object)str5, (object)value.GetType(), (object)str2);
                 if (str2.Length > 0 || flag || (type.IsValueType && type.FullName == "System." + type.Name || type.FullName == "System.Reflection." + type.Name || (value is SecurityIdentifier || !recursiveDump)))
                     return;
-                PropertyInfo[] propertyInfoArray = Enumerable.ToArray<PropertyInfo>(Enumerable.Where<PropertyInfo>((IEnumerable<PropertyInfo>)type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic), (Func<PropertyInfo, bool>)(property => property.GetIndexParameters().Length == 0 && property.CanRead)));
-                FieldInfo[] fieldInfoArray = Enumerable.ToArray<FieldInfo>((IEnumerable<FieldInfo>)type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
-                if (propertyInfoArray.Length == 0 && fieldInfoArray.Length == 0)
-                    return;
-                writer.WriteLine(string.Format((IFormatProvider)CultureInfo.InvariantCulture, "{0}{{", new object[1]
-        {
-          (object) str1
-        }));
-                if (propertyInfoArray.Length > 0)
+                if (value is NameValueCollection)
                 {
-                    writer.WriteLine(string.Format((IFormatProvider)CultureInfo.InvariantCulture, "{0}   properties {{", new object[1]
-          {
-            (object) str1
-          }));
-                    foreach (PropertyInfo propertyInfo in propertyInfoArray)
-                    {
-                        try
+                    var v = (NameValueCollection)value;
+                    v.AllKeys.ToList().ForEach(x =>
                         {
-                            object obj = propertyInfo.GetValue(value, (object[])null);
-                            ObjectDumper2.InternalDump(indentationLevel + 2, propertyInfo.Name, obj, writer, idGenerator, true, CompactMode);
-                        }
-                        catch (TargetInvocationException ex)
-                        {
-                            ObjectDumper2.InternalDump(indentationLevel + 2, propertyInfo.Name, (object)ex, writer, idGenerator, false, CompactMode);
-                        }
-                        catch (ArgumentException ex)
-                        {
-                            ObjectDumper2.InternalDump(indentationLevel + 2, propertyInfo.Name, (object)ex, writer, idGenerator, false, CompactMode);
-                        }
-                        catch (RemotingException ex)
-                        {
-                            ObjectDumper2.InternalDump(indentationLevel + 2, propertyInfo.Name, (object)ex, writer, idGenerator, false, CompactMode);
-                        }
-                    }
-                    writer.WriteLine(string.Format((IFormatProvider)CultureInfo.InvariantCulture, "{0}   }}", new object[1]
-          {
-            (object) str1
-          }));
+                            InternalDump(indentationLevel + 2, x, v[x], writer, idGenerator, true, CompactMode);
+                        });
                 }
-                if (fieldInfoArray.Length > 0 && !CompactMode)
+                else
                 {
-                    writer.WriteLine(string.Format((IFormatProvider)CultureInfo.InvariantCulture, "{0}   fields {{", new object[1]
-          {
-            (object) str1
-          }));
-                    foreach (FieldInfo fieldInfo in fieldInfoArray)
-                    {
-                        try
-                        {
-                            object obj = fieldInfo.GetValue(value);
-                            ObjectDumper2.InternalDump(indentationLevel + 2, fieldInfo.Name, obj, writer, idGenerator, true, CompactMode);
-                        }
-                        catch (TargetInvocationException ex)
-                        {
-                            ObjectDumper2.InternalDump(indentationLevel + 2, fieldInfo.Name, (object)ex, writer, idGenerator, false, CompactMode);
-                        }
-                    }
-                    writer.WriteLine(string.Format((IFormatProvider)CultureInfo.InvariantCulture, "{0}   }}", new object[1]
-          {
-            (object) str1
-          }));
+                    WriteObject(indentationLevel, value, writer, idGenerator, CompactMode, str1, type);
                 }
-                writer.WriteLine(string.Format((IFormatProvider)CultureInfo.InvariantCulture, "{0}}}", new object[1]
+                writer.WriteLine("{0}}}", str1);
+            }
+        }
+
+        private static void WriteObject(int indentationLevel, object value, TextWriter writer, ObjectIDGenerator idGenerator, bool CompactMode, string str1, Type type)
         {
-          (object) str1
-        }));
+            PropertyInfo[] propertyInfoArray = Enumerable.ToArray<PropertyInfo>(Enumerable.Where<PropertyInfo>((IEnumerable<PropertyInfo>)type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic), (Func<PropertyInfo, bool>)(property => property.GetIndexParameters().Length == 0 && property.CanRead)));
+            FieldInfo[] fieldInfoArray = Enumerable.ToArray<FieldInfo>((IEnumerable<FieldInfo>)type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
+            if (propertyInfoArray.Length == 0 && fieldInfoArray.Length == 0)
+               return;
+            writer.WriteLine("{0}{{", str1);
+            if (propertyInfoArray.Length > 0)
+            {
+                writer.WriteLine("{0}   properties {{", str1);
+                foreach (PropertyInfo propertyInfo in propertyInfoArray)
+                {
+                    try
+                    {
+                        object obj = propertyInfo.GetValue(value, (object[])null);
+                        ObjectDumper2.InternalDump(indentationLevel + 2, propertyInfo.Name, obj, writer, idGenerator, true, CompactMode);
+                    }
+                    catch (TargetInvocationException ex)
+                    {
+                        ObjectDumper2.InternalDump(indentationLevel + 2, propertyInfo.Name, (object)ex, writer, idGenerator, false, CompactMode);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        ObjectDumper2.InternalDump(indentationLevel + 2, propertyInfo.Name, (object)ex, writer, idGenerator, false, CompactMode);
+                    }
+                    catch (RemotingException ex)
+                    {
+                        ObjectDumper2.InternalDump(indentationLevel + 2, propertyInfo.Name, (object)ex, writer, idGenerator, false, CompactMode);
+                    }
+                }
+                writer.WriteLine("{0}   }}", str1);
+            }
+            if (fieldInfoArray.Length > 0 && !CompactMode)
+            {
+                writer.WriteLine("{0}   fields {{", str1);
+                foreach (FieldInfo fieldInfo in fieldInfoArray)
+                {
+                    try
+                    {
+                        object obj = fieldInfo.GetValue(value);
+                        ObjectDumper2.InternalDump(indentationLevel + 2, fieldInfo.Name, obj, writer, idGenerator, true, CompactMode);
+                    }
+                    catch (TargetInvocationException ex)
+                    {
+                        ObjectDumper2.InternalDump(indentationLevel + 2, fieldInfo.Name, (object)ex, writer, idGenerator, false, CompactMode);
+                    }
+                }
+                writer.WriteLine("{0}   }}", str1);
+
             }
         }
 

@@ -14,12 +14,17 @@ namespace TwilioEmulator.Offices
         {
             Task.Factory.StartNew(() =>
                 {
-                    Process();
-                    Thread.Sleep(SystemController.WaitInterval);
-                },TaskCreationOptions.LongRunning);
+
+                    while (true)
+                    {
+                        Process();
+                        Thread.Sleep(SystemController.WaitInterval);
+                    }
+                }
+                 , TaskCreationOptions.LongRunning);
         }
 
-        public abstract void Process();
+        protected abstract void Process();
        
     }
 }

@@ -5,7 +5,8 @@ using System.Text;
 
 namespace TwilioEmulator.Phones
 {
-    public class PhoneBase
+    public interface IPhoneManager
     {
+        PhoneStatus AttemptDial(string PhoneNumber);  
     }
 }

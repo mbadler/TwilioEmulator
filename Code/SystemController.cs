@@ -10,6 +10,7 @@ using System.Net.Http.Formatting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using TwilioEmulator.Offices;
+using TwilioEmulator.Phones;
 
 
 namespace TwilioEmulator.Code
@@ -48,6 +49,8 @@ namespace TwilioEmulator.Code
 
         public MainForm theForm { get; set; }
 
+        public IPhoneManager PhoneManager { get; set; }
+
         public int ActivePort { get; set; }
 
         private static int _waitInterval = 1000;
@@ -63,14 +66,16 @@ namespace TwilioEmulator.Code
         {
             string port = Settings.Default.Port;
             HttpSelfHostConfiguration configuration = new HttpSelfHostConfiguration("http://localhost:" + port);
-            string name1 = "Default";
+
             string routeTemplate1 = "2010-04-01/Accounts/{sid}/{controller}.json/{id}";
-            object defaults1 = (object)new
+            string routeTemplate2 = "2010-04-01/Accounts/{sid}/{controller}/{id}";
+            object defaults = (object)new
             {
                 id = RouteParameter.Optional
             };
-            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, name1, routeTemplate1, defaults1);
-
+            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "Default", routeTemplate1, defaults);
+            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "Direct", routeTemplate2, defaults);
+            
             JsonMediaTypeFormatter jsonFormatter = configuration.Formatters.JsonFormatter;
             JsonSerializerSettings jSettings = new Newtonsoft.Json.JsonSerializerSettings()
             {
@@ -79,14 +84,8 @@ namespace TwilioEmulator.Code
             };
             jSettings.Converters.Add(new TwilioDateTimeConvertor());
             jsonFormatter.SerializerSettings = jSettings;
-
-            string name2 = "Direct";
-            string routeTemplate2 = "2010-04-01/Accounts/{sid}/{controller}/{id}";
-            object defaults2 = (object)new
-            {
-                id = RouteParameter.Optional
-            };
-            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, name2, routeTemplate2, defaults2);
+            
+            
             HttpSelfHostServer httpSelfHostServer = new HttpSelfHostServer(configuration);
             try
             {
@@ -105,6 +104,7 @@ namespace TwilioEmulator.Code
         public void StartUp()
         {
             this.StartWebServer();
+            Office.Startup();
              
         }
 

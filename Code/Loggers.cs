@@ -23,6 +23,14 @@ namespace TwilioEmulator.Code
             return stringWriter.ToString();
 
         }
+
+        public static void Log2Nodes(this ILogger l,string name,string Node1Name,object node1object,string Node2Name,object node2object,bool LogAsError)
+        {
+            var a = new Dictionary<string, object>();
+            a.Add(Node1Name, node1object);
+            a.Add(Node2Name, node2object);
+            l.LogDictionaryOfObjects(name, a);
+        }
     }
 
     public class ConsoleLogger : ILogger
