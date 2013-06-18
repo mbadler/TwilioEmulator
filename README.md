@@ -36,7 +36,10 @@ __Manual Phone Statuses:__
   
 
 
-  
+__Current Known And/or Planned Limitations__
+
+  - Callbacks are POST only
+  - No security checking at all
 
 
 
