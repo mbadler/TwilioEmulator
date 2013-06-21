@@ -9,12 +9,18 @@ The goal is to emulate most of Twilio's functions - including Call control API a
 Current Status
 --------------
 
+  The Emulator is currently focused on outbound initiated phone calls.
+  Inbound Phone calls will be added later.
+
   - The emulator listens fro REST Connections on port 28080
   - POSTS to calls.json (twilio.InitiateOutboundCall() with the c# helper):
     - Request are accepted
     - A response indicating that the call has been queued is returned
     - The call is added to the call queue
-    - A callback is sent back to the indicated url with the status of ringing busy or no-answer
+    - If the overall call status is set to busy,No-answer etc... then a callback is sent to the status url with that staus
+    - The phone key pad starts to blink indicateing that the phone is ringing
+    - Click the pickup phone button - the phone call connects
+    - A connect request Twiml is sent
   - All requests and responses are logged
 
 
