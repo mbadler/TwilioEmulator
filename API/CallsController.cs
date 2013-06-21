@@ -14,7 +14,7 @@ namespace TwilioEmulator.API
 
             var cl = SystemController.Office.NewCallRequest(c);
             a.Add("Response",cl.Call);
-            SystemController.Instance.Logger.LogDictionaryOfObjects("-> CallRequest",a);
+            SystemController.Instance.Logger.LogDictionaryOfObjects("() --> []  CallRequest",a);
             return cl.Call;
         }
     }

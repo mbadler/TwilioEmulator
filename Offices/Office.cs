@@ -46,7 +46,7 @@ namespace TwilioEmulator.Offices
         protected override void Process()
         {
             // run thru each call and see what needs to be done with them
-            CallList.AsParallel().ForAll(x=>
+            CallList.Where(x=>x.CallStatus!=CallStatus.Ended).AsParallel().ForAll(x=>
                 {
                     ProcessCallInstance(x);
                 });
@@ -100,7 +100,27 @@ namespace TwilioEmulator.Offices
                 default:
                     break;
             }
-            var twiml = SendCallCallBack(ci, ci.Call.GenerateCallBackValue());
+            // if it is not a good call send back a error call status and mark the call done
+            // else mark it as waiting for the phone
+            if (!Callok)
+            {
+                ci.CallStatus = CallStatus.Ended;
+                SendCallCallBack(ci, ci.Call.GenerateCallBackValue());
+            }
+            else
+            {
+                ci.CallStatus = CallStatus.WaitingForPhone;
+            }
+            
+        }
+
+        public void PhonePickedUp(string phonenumber)
+        {
+            // find the ci with that phone number
+            var a = CallList.Where(x => (x.Call.To == phonenumber && x.Call.Status == TwilioCallStatuses.RINGING)).First();
+            a.Call.Status = TwilioCallStatuses.INPROGRESS;
+            a.CallStatus = CallStatus.SendingCallBack;
+            SystemController.Instance.Logger.LogLine("[] <--  }   Phone Picked up");
         }
 
 
@@ -111,12 +131,13 @@ namespace TwilioEmulator.Offices
             try
             {
                  a = Encoding.ASCII.GetString(wc.UploadValues(ci.CallBackurl, nvc));
+                SystemController.Instance.Logger.Log2Nodes("() <-- []   Call Start Call Back to " + ci.CallBackurl, "Request", nvc, "Response", a, false);
             }
             catch (Exception ex)
             {
                 SystemController.Instance.Logger.Log2Nodes("<- Exception on Call Start Call Back to " + ci.CallBackurl+ex.Message, "Request", nvc, "Response", a, false);
             }
-            SystemController.Instance.Logger.Log2Nodes("<- Call Start Call Back to " + ci.CallBackurl, "Request", nvc, "Response", a, false);
+           
             return a;
         }
     }

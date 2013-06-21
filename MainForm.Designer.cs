@@ -32,6 +32,7 @@ namespace TwilioEmulator
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.trvLog = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -44,26 +45,11 @@ namespace TwilioEmulator
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tbKeyPad = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.btn1 = new System.Windows.Forms.Button();
-            this.btn2 = new System.Windows.Forms.Button();
-            this.btn3 = new System.Windows.Forms.Button();
-            this.btn4 = new System.Windows.Forms.Button();
-            this.btn5 = new System.Windows.Forms.Button();
-            this.btn6 = new System.Windows.Forms.Button();
-            this.btn7 = new System.Windows.Forms.Button();
-            this.btn8 = new System.Windows.Forms.Button();
-            this.btn9 = new System.Windows.Forms.Button();
-            this.btnAsterik = new System.Windows.Forms.Button();
-            this.btnHash = new System.Windows.Forms.Button();
-            this.btn0 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.tbScript = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.touchPadDialer1 = new TwilioEmulator.TouchPadDialer();
+            this.tbtnMakePhoneNoises = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -74,9 +60,6 @@ namespace TwilioEmulator
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tbKeyPad.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -123,7 +106,8 @@ namespace TwilioEmulator
             this.toolStripLabel1,
             this.toolStripSeparator1,
             this.toolStripLabel2,
-            this.ddAnswerMode});
+            this.ddAnswerMode,
+            this.tbtnMakePhoneNoises});
             this.toolStrip1.Location = new System.Drawing.Point(0, 14);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(681, 25);
@@ -161,6 +145,7 @@ namespace TwilioEmulator
             this.ddAnswerMode.Name = "ddAnswerMode";
             this.ddAnswerMode.Size = new System.Drawing.Size(125, 25);
             this.ddAnswerMode.SelectedIndexChanged += new System.EventHandler(this.ddAnswerMode_SelectedIndexChanged);
+            this.ddAnswerMode.Click += new System.EventHandler(this.ddAnswerMode_Click);
             // 
             // lblServerHeader
             // 
@@ -185,7 +170,7 @@ namespace TwilioEmulator
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.tabControl1);
+            this.splitContainer2.Panel2.Controls.Add(this.touchPadDialer1);
             this.splitContainer2.Panel2.Controls.Add(this.label3);
             this.splitContainer2.Size = new System.Drawing.Size(681, 308);
             this.splitContainer2.SplitterDistance = 328;
@@ -209,211 +194,6 @@ namespace TwilioEmulator
             this.label1.Size = new System.Drawing.Size(328, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Call Log:";
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tbKeyPad);
-            this.tabControl1.Controls.Add(this.tbScript);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 13);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(349, 295);
-            this.tabControl1.TabIndex = 2;
-            // 
-            // tbKeyPad
-            // 
-            this.tbKeyPad.Controls.Add(this.tableLayoutPanel1);
-            this.tbKeyPad.Controls.Add(this.button1);
-            this.tbKeyPad.Location = new System.Drawing.Point(4, 23);
-            this.tbKeyPad.Name = "tbKeyPad";
-            this.tbKeyPad.Padding = new System.Windows.Forms.Padding(3);
-            this.tbKeyPad.Size = new System.Drawing.Size(341, 268);
-            this.tbKeyPad.TabIndex = 0;
-            this.tbKeyPad.Text = "Keypad";
-            this.tbKeyPad.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tableLayoutPanel1.Controls.Add(this.btn1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.btn2, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.btn3, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.btn4, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btn5, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btn6, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btn7, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.btn8, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.btn9, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.btnAsterik, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.btnHash, 2, 3);
-            this.tableLayoutPanel1.Controls.Add(this.btn0, 1, 3);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 63);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(335, 202);
-            this.tableLayoutPanel1.TabIndex = 1;
-            // 
-            // btn1
-            // 
-            this.btn1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn1.Location = new System.Drawing.Point(3, 3);
-            this.btn1.Name = "btn1";
-            this.btn1.Size = new System.Drawing.Size(105, 44);
-            this.btn1.TabIndex = 0;
-            this.btn1.Text = "1";
-            this.btn1.UseVisualStyleBackColor = true;
-            // 
-            // btn2
-            // 
-            this.btn2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn2.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn2.Location = new System.Drawing.Point(114, 3);
-            this.btn2.Name = "btn2";
-            this.btn2.Size = new System.Drawing.Size(105, 44);
-            this.btn2.TabIndex = 1;
-            this.btn2.Text = "2\r\nABC";
-            this.btn2.UseVisualStyleBackColor = true;
-            // 
-            // btn3
-            // 
-            this.btn3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn3.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn3.Location = new System.Drawing.Point(225, 3);
-            this.btn3.Name = "btn3";
-            this.btn3.Size = new System.Drawing.Size(107, 44);
-            this.btn3.TabIndex = 2;
-            this.btn3.Text = "3\r\nDEF";
-            this.btn3.UseVisualStyleBackColor = true;
-            // 
-            // btn4
-            // 
-            this.btn4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn4.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn4.Location = new System.Drawing.Point(3, 53);
-            this.btn4.Name = "btn4";
-            this.btn4.Size = new System.Drawing.Size(105, 44);
-            this.btn4.TabIndex = 4;
-            this.btn4.Text = "4\r\nGHI";
-            this.btn4.UseVisualStyleBackColor = true;
-            // 
-            // btn5
-            // 
-            this.btn5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn5.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn5.Location = new System.Drawing.Point(114, 53);
-            this.btn5.Name = "btn5";
-            this.btn5.Size = new System.Drawing.Size(105, 44);
-            this.btn5.TabIndex = 4;
-            this.btn5.Text = "5\r\nJKL";
-            this.btn5.UseVisualStyleBackColor = true;
-            // 
-            // btn6
-            // 
-            this.btn6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn6.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn6.Location = new System.Drawing.Point(225, 53);
-            this.btn6.Name = "btn6";
-            this.btn6.Size = new System.Drawing.Size(107, 44);
-            this.btn6.TabIndex = 5;
-            this.btn6.Text = "6\r\nMNO";
-            this.btn6.UseVisualStyleBackColor = true;
-            // 
-            // btn7
-            // 
-            this.btn7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn7.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn7.Location = new System.Drawing.Point(3, 103);
-            this.btn7.Name = "btn7";
-            this.btn7.Size = new System.Drawing.Size(105, 44);
-            this.btn7.TabIndex = 6;
-            this.btn7.Text = "7\r\nPQRS";
-            this.btn7.UseVisualStyleBackColor = true;
-            // 
-            // btn8
-            // 
-            this.btn8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn8.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn8.Location = new System.Drawing.Point(114, 103);
-            this.btn8.Name = "btn8";
-            this.btn8.Size = new System.Drawing.Size(105, 44);
-            this.btn8.TabIndex = 7;
-            this.btn8.Text = "8\r\nTUV";
-            this.btn8.UseVisualStyleBackColor = true;
-            // 
-            // btn9
-            // 
-            this.btn9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn9.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn9.Location = new System.Drawing.Point(225, 103);
-            this.btn9.Name = "btn9";
-            this.btn9.Size = new System.Drawing.Size(107, 44);
-            this.btn9.TabIndex = 8;
-            this.btn9.Text = "9\r\nWXYZ";
-            this.btn9.UseVisualStyleBackColor = true;
-            // 
-            // btnAsterik
-            // 
-            this.btnAsterik.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnAsterik.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAsterik.Location = new System.Drawing.Point(3, 153);
-            this.btnAsterik.Name = "btnAsterik";
-            this.btnAsterik.Size = new System.Drawing.Size(105, 46);
-            this.btnAsterik.TabIndex = 9;
-            this.btnAsterik.Text = "*";
-            this.btnAsterik.UseVisualStyleBackColor = true;
-            // 
-            // btnHash
-            // 
-            this.btnHash.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnHash.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHash.Location = new System.Drawing.Point(225, 153);
-            this.btnHash.Name = "btnHash";
-            this.btnHash.Size = new System.Drawing.Size(107, 46);
-            this.btnHash.TabIndex = 10;
-            this.btnHash.Text = "#";
-            this.btnHash.UseVisualStyleBackColor = true;
-            // 
-            // btn0
-            // 
-            this.btn0.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn0.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn0.Location = new System.Drawing.Point(114, 153);
-            this.btn0.Name = "btn0";
-            this.btn0.Size = new System.Drawing.Size(105, 46);
-            this.btn0.TabIndex = 11;
-            this.btn0.Text = "0";
-            this.btn0.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button1.Location = new System.Drawing.Point(3, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(335, 60);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Dial Number";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // tbScript
-            // 
-            this.tbScript.Location = new System.Drawing.Point(4, 22);
-            this.tbScript.Name = "tbScript";
-            this.tbScript.Padding = new System.Windows.Forms.Padding(3);
-            this.tbScript.Size = new System.Drawing.Size(341, 269);
-            this.tbScript.TabIndex = 1;
-            this.tbScript.Text = "Script";
-            this.tbScript.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -440,6 +220,28 @@ namespace TwilioEmulator
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // touchPadDialer1
+            // 
+            this.touchPadDialer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.touchPadDialer1.Location = new System.Drawing.Point(0, 13);
+            this.touchPadDialer1.Margin = new System.Windows.Forms.Padding(0);
+            this.touchPadDialer1.Name = "touchPadDialer1";
+            this.touchPadDialer1.PhoneStatus = TwilioEmulator.Phones.PhoneStatus.ReadyHuman;
+            this.touchPadDialer1.Size = new System.Drawing.Size(349, 295);
+            this.touchPadDialer1.TabIndex = 2;
+            // 
+            // tbtnMakePhoneNoises
+            // 
+            this.tbtnMakePhoneNoises.Checked = true;
+            this.tbtnMakePhoneNoises.CheckOnClick = true;
+            this.tbtnMakePhoneNoises.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tbtnMakePhoneNoises.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tbtnMakePhoneNoises.Image = ((System.Drawing.Image)(resources.GetObject("tbtnMakePhoneNoises.Image")));
+            this.tbtnMakePhoneNoises.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbtnMakePhoneNoises.Name = "tbtnMakePhoneNoises";
+            this.tbtnMakePhoneNoises.Size = new System.Drawing.Size(108, 22);
+            this.tbtnMakePhoneNoises.Text = "Play Phone Noises";
+            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(681, 650);
@@ -460,9 +262,6 @@ namespace TwilioEmulator
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.tbKeyPad.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -483,24 +282,9 @@ namespace TwilioEmulator
         private SplitContainer splitContainer2;
         private RichTextBox richTextBox1;
         private Label label1;
-        private TabControl tabControl1;
-        private TabPage tbKeyPad;
-        private TableLayoutPanel tableLayoutPanel1;
-        private Button btn1;
-        private Button btn2;
-        private Button btn3;
-        private Button btn4;
-        private Button btn5;
-        private Button btn6;
-        private Button btn7;
-        private Button btn8;
-        private Button btn9;
-        private Button btnAsterik;
-        private Button btnHash;
-        private Button btn0;
-        private Button button1;
-        private TabPage tbScript;
         private Label label3;
         private ImageList imageList1;
+        private TouchPadDialer touchPadDialer1;
+        private ToolStripButton tbtnMakePhoneNoises;
     }
 }

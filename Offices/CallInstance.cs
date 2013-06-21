@@ -32,6 +32,8 @@ public enum CallStatus
     Queued,
     CallbackSent,
     WaitingForPhone,
+    SendingCallBack,
+    SendingPhone,
     Ended
 }
 }
