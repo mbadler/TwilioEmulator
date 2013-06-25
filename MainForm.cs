@@ -95,6 +95,26 @@ namespace TwilioEmulator
             touchPadDialer1.ChangePhoneStatus(ddAnswerMode.SelectedItem.ToString());
         }
 
-       
+        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            
+        }
+
+        private static bool _AutoPickup = true;
+
+        public static bool AutoPickup
+        {
+            get { return _AutoPickup; }
+            set { _AutoPickup = value; }
+        }
+        
+        
+
+        private void tbtnAutoPickup_Click(object sender, EventArgs e)
+        {
+            AutoPickup = tbtnAutoPickup.Checked;
+        }
+
+
     }
 }

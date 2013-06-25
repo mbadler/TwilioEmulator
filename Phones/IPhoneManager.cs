@@ -7,6 +7,7 @@ namespace TwilioEmulator.Phones
 {
     public interface IPhoneManager
     {
-        PhoneStatus AttemptDial(string PhoneNumber);  
+        PhoneStatus AttemptDial(string PhoneNumber);
+        void CallHungUp(string PhoneNumber, string Reason);
     }
 }

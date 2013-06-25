@@ -9,17 +9,25 @@ namespace TwilioEmulator.Code.Extensions
 {
     public static class CallExtentions
     {
-        public static NameValueCollection GenerateCallBackValue(this Call c)
+        public static NameValueCollection GenerateCallBackValue(this CallInstance c)
         {
-            return new NameValueCollection()
+            var v = new NameValueCollection()
             {
-                {"AccountSid",c.AccountSid},
-                {"CallSid",c.Sid},
-                {"CallStatus",c.Status},
-                {"From",c.From},
-                {"To",c.To}
+                {"AccountSid",c.Call.AccountSid},
+                {"CallSid",c.Call.Sid},
+                {"CallStatus",c.Call.Status},
+                {"From",c.Call.From},
+                {"To",c.Call.To}
             };
-            
+            if (c.Digits != "")
+            {
+                v.Add("Digits", c.Digits);
+            }
+            if (c.Call.AnsweredBy != "")
+            {
+                v.Add("AnsweredBy", c.Call.AnsweredBy);
+            }
+            return v;
 
         }
     }

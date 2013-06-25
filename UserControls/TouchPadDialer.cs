@@ -22,6 +22,7 @@ namespace TwilioEmulator
         #region IPhoneManager Implements
 
         string currentPhoneNum = "";
+        
 
         public PhoneStatus AttemptDial(string PhoneNumber)
         {
@@ -64,6 +65,21 @@ namespace TwilioEmulator
             return retStatus;
         }
 
+         public void CallHungUp(string PhoneNumber, string Reason)
+        {
+            PhoneStatus = DefaultPhoneStatus; 
+        }
+
+
+         private PhoneStatus _defaultPhoneStatus = PhoneStatus.ReadyHuman;
+
+         public PhoneStatus DefaultPhoneStatus
+         {
+             get { return _defaultPhoneStatus; }
+             set { _defaultPhoneStatus = value; }
+         }
+         
+        
         PhoneStatus _phoneStatus = PhoneStatus.ReadyHuman; 
         public PhoneStatus PhoneStatus
         {
@@ -82,8 +98,19 @@ namespace TwilioEmulator
                 {
                     StartPhoneRinging();
                 }
+                if (value == DefaultPhoneStatus)
+                {
+                    // we are assuming that the phone was hung up 
+                    ResetPhone();
+                }
                 _phoneStatus = value;
             }
+        }
+
+        private void ResetPhone()
+        {
+            btnStatus.BackColor = Color.Transparent;
+            btnStatus.Text = "Dial Number";
         }
 
         #endregion
@@ -95,7 +122,10 @@ namespace TwilioEmulator
                 timer1.Enabled = true;
                 btnStatus.Text = "Ringing (Pick up)";
                 //Console.WriteLine("-- " + DateTime.Now.ToString() + " " + name);
+               
             }));
+            
+           
         }
 
         public void ChangePhoneStatus(string PhoneStatusText)
@@ -105,13 +135,17 @@ namespace TwilioEmulator
                 MessageBox.Show("There currenly is a phone call in progress - please end it before changeing statuses");
                 return;
             }
-
+            
             switch (PhoneStatusText)
             {
                 case "Answer-Human":
-                case "Answer-Machine":
                     {
                         PhoneStatus = PhoneStatus.ReadyHuman;
+                        break;
+                    }
+                case "Answer-Machine":
+                    {
+                        PhoneStatus = PhoneStatus.ReadyMachine;
                         break;
                     }
                 case "No Answer":
@@ -130,10 +164,18 @@ namespace TwilioEmulator
                         break;
                     }
             }
+            DefaultPhoneStatus = PhoneStatus;
         }
         bool ringFlipFlop = false;
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (MainForm.AutoPickup)
+            {
+              
+                    PickupPhone();
+                    return;
+              
+            }
             ringFlipFlop = !ringFlipFlop;
             btnStatus.BackColor = (ringFlipFlop) ? SystemColors.Control : Color.Red;
         }
@@ -160,7 +202,7 @@ namespace TwilioEmulator
 
         private void HangupPhone()
         {
-            
+            PhoneStatus = DefaultPhoneStatus;
 
         }
 
@@ -169,8 +211,11 @@ namespace TwilioEmulator
             btnStatus.Text = "Talking (Hang Up)";
             btnStatus.BackColor = Color.PowderBlue;
             PhoneStatus = PhoneStatus.Talking;
-            SystemController.Office.PhonePickedUp(currentPhoneNum);
+            SystemController.Office.PhonePickedUp(currentPhoneNum,DefaultPhoneStatus == PhoneStatus.ReadyMachine?true:false);
             
         }
+
+
+       
     }
 }
