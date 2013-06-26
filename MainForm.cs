@@ -34,56 +34,10 @@ namespace TwilioEmulator
 
 
 
-        #region ILogger Implemtents
-        void ILogger.LogSimpleObject(object obj, string name)
-        {
-            this.BeginInvoke((Action)(() =>
-            {
-                TreeNode tn = new TreeNode(DateTime.Now.ToString() + " " + Name);
-                trvLog.Nodes.Add(tn);
-                TreeNode tnc = new TreeNode(this.GetObjectText(obj));
-                tn.Nodes.Add(tnc);
-                //Console.WriteLine("-- " + DateTime.Now.ToString() + " " + name);
-            }));
-        }
-
-    
-
-        void ILogger.LogLine(string text)
-        {this.BeginInvoke((Action)(() =>
-            {
-                TreeNode tn = new TreeNode(DateTime.Now.ToString() + " " + text);
-                trvLog.Nodes.Add(tn);
-                //Console.WriteLine("-- " + DateTime.Now.ToString() + " " + name);
-            }));
-            
-        }
-
-
-        void ILogger.LogDictionaryOfObjects(string name, Dictionary<string, object> LogObj)
-        {
-            this.BeginInvoke((Action)(() =>
-            {
-                TreeNode tn = new TreeNode(DateTime.Now.ToString() + " " + name);
-                trvLog.Nodes.Add(tn);
-                LogObj.ToList().ForEach(x =>
-                    {
-                        tn.Nodes.Add(new TreeNode(x.Key + " : " + this.GetObjectText(x.Value)));
-                    });
-            }));
-        }
-
-        #endregion
 
        
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var v = new NameValueCollection();
-            v.Add("asdfasd", "sdafsdf");
-            v.Add("dsfsdf", "asdfsd");
-            SystemController.Instance.Logger.LogSimpleObject(v, "ff");
-        }
+       
 
         private void ddAnswerMode_Click(object sender, EventArgs e)
         {
@@ -116,5 +70,28 @@ namespace TwilioEmulator
         }
 
 
+
+        public void LogObj(LogObj logObject)
+        {
+            this.BeginInvoke((Action)(() =>
+            {
+                TreeNode tn = new TreeNode();
+                string nodeTxt = DateTime.Now.ToString() + " " + logObject.LogSymbol.ToDisplayString() + " " + logObject.Caption;
+                if (logObject.CallInstance != null)
+                {
+                   nodeTxt = nodeTxt + " (" + logObject.CallInstance.CallOptions.From + "->" + logObject.CallInstance.CallOptions.To + ")";
+                   tn.BackColor = logObject.CallInstance.CallColor;
+                }
+
+                tn.Text = nodeTxt;
+
+                trvLog.Nodes.Add(tn);
+                logObject.logObjs.ToList().ForEach(x =>
+                 {
+                     tn.Nodes.Add(new TreeNode(x.Key + " : " + this.GetObjectText(x.Value)));
+                 }
+                 );
+            }));
+        }
     }
 }

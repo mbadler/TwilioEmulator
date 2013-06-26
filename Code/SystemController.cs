@@ -21,7 +21,7 @@ namespace TwilioEmulator.Code
 
         #region Static 
         private static readonly Lazy<SystemController> _instance = new Lazy<SystemController>((Func<SystemController>)(() => new SystemController()));
-        private static readonly Lazy<Office> _office = new Lazy<Office>((Func<Office>)(() => new Office()));
+        private  readonly Lazy<Office> _office = new Lazy<Office>((Func<Office>)(() => new Office()));
 
         public static bool ConsoleMode { get; set; }
 
@@ -35,11 +35,11 @@ namespace TwilioEmulator.Code
             }
         }
 
-        public static Office Office
+        public   Office Office
         {
             get
             {
-                return SystemController._office.Value;
+                return _office.Value;
             }
         }
 

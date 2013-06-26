@@ -91,6 +91,7 @@
     <Compile Include="API\CallsController.cs" />
     <Compile Include="API\Infrastructure\BaseController.cs" />
     <Compile Include="Code\Extensions\CallExtentions.cs" />
+    <Compile Include="Code\LogSymbol.cs" />
     <Compile Include="Code\TwilioCallStatuses.cs" />
     <Compile Include="Code\TwimlResponse.cs" />
     <Compile Include="Offices\CallInstance.cs" />

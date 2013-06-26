@@ -80,16 +80,28 @@ namespace TwilioEmulator.Offices
             ci.CallStatus = CallStatus.CallbackSent;
             var a = "";
             var nvc = ci.GenerateCallBackValue();
+            var v = new LogObj()
+            {
+                LogSymbol = LogSymbol.TwilioToWeb,
+                CallInstance = ci,
+                Caption = LogAs+" to "+ UrlToUse
+            };
+
+
+
             try
             {
                 a = ci.BrowserClient.DoRequest(UrlToUse,nvc);
-                SystemController.Instance.Logger.Log2Nodes("() <-- []   "+LogAs+" to "+ UrlToUse, "Request", nvc, "Response", a, false);
+                v.AddNode("Request", nvc).AddNode("Response", a);
+
                 ci.LatestTwiml = a;
             }
             catch (Exception ex)
             {
-                SystemController.Instance.Logger.Log2Nodes("<- Exception on Call Start Call Back to " + ci.CallBackurl + ex.Message, "Request", nvc, "Response", a, false);
+                v.Caption = "<- Exception on Call Start Call Back to " + ci.CallBackurl + ex.Message;
+               
             }
+            SystemController.Instance.Logger.LogObj(v);
             ci.CallStatus = CallStatus.ProcessingCall;
 
         }
@@ -102,8 +114,16 @@ namespace TwilioEmulator.Offices
             
             Boolean Callok = false;
 
-            var c = ci.Call;    
-            switch (SystemController.Instance.PhoneManager.AttemptDial(ci.Call.To))
+            var c = ci.Call;
+            var v = SystemController.Instance.PhoneManager.AttemptDial(ci.Call.To);
+                 SystemController.Instance.Logger.LogObj(new  LogObj()
+            {
+                Caption = "Dial to Phone",
+                LogSymbol = LogSymbol.TwilioToPhone,
+                CallInstance = ci
+
+            }.AddNode("Incoming Number", ci.CallOptions.To).AddNode("Phone Status", v.ToString()));
+            switch (v)
             {
 
                 case PhoneStatus.Busy:
@@ -136,7 +156,7 @@ namespace TwilioEmulator.Offices
             if (!Callok)
             {
                 ci.CallStatus = CallStatus.Ended;
-                SendCallEndInErrorCallBack(ci, ci.GenerateCallBackValue(),c.Status);
+                SendCallEndStatus(ci, ci.GenerateCallBackValue(), c.Status);
             }
             else
             {
@@ -145,11 +165,36 @@ namespace TwilioEmulator.Offices
             
         }
 
-        public void PhonePickedUp(string phonenumber,bool IsMachine)
+        public void PhoneHungUp(string phonenumber)
+        {
+            var a = GetCallInstanceFromPhoneNumber(phonenumber);
+            var v = new LogObj()
+            {
+                Caption = "X Phone hung up call",
+                LogSymbol = Code.LogSymbol.PhoneToTwilio,
+                CallInstance = a
+            };
+
+
+            SystemController.Instance.Logger.LogObj(v);
+            a.Call.Status = TwilioCallStatuses.COMPLETED;
+            SendCallEndStatus(a, a.GenerateCallBackValue(), "Hung up");
+            a.CallStatus = CallStatus.Ended;
+        }
+
+        public void PhonePickedUp(string phonenumber, bool IsMachine)
         {
             // find the ci with that phone number
-            SystemController.Instance.Logger.LogLine("[] <--  }   Phone Picked up "+phonenumber+(IsMachine?" Machine":"") );
-            var a = CallList.Where(x => (x.Call.To == phonenumber && x.CallStatus != CallStatus.Ended)).First();
+            var a = GetCallInstanceFromPhoneNumber(phonenumber);
+            var v = new LogObj()
+            {
+                Caption = "^ Phone Picked Up " + (IsMachine ? " Machine" : ""),
+                LogSymbol = LogSymbol.PhoneToTwilio,
+                CallInstance = a
+            };
+
+            SystemController.Instance.Logger.LogObj(v);
+
             if (a.CallOptions.IfMachine != "")
             {
                 if (!IsMachine)
@@ -158,46 +203,69 @@ namespace TwilioEmulator.Offices
                 }
                 else
                 {
-                    a.Call.AnsweredBy= "Machine";
+                    a.Call.AnsweredBy = "Machine";
                     if (a.CallOptions.IfMachine == "Hangup")
                     {
                         HangUpThePhoneConnectionFromTheserver(a, "Answered by machine");
-                        SendCallEndInErrorCallBack(a, a.GenerateCallBackValue(),"Answered by answering machine");
+                        SendCallEndStatus(a, a.GenerateCallBackValue(), "Answered by answering machine");
                         a.CallStatus = CallStatus.Ended;
                         return;
                     }
-                    
+
                 }
             }
-               
-            a.Call.Status = TwilioCallStatuses.INPROGRESS;
-            ProcessDoTwimlRequest(a, a.CallOptions.Url,"Get Welcome message Twiml");
 
+            a.Call.Status = TwilioCallStatuses.INPROGRESS;
+            ProcessDoTwimlRequest(a, a.CallOptions.Url, "Get Welcome message Twiml");
+
+        }
+
+        public CallInstance GetCallInstanceFromPhoneNumber(string phonenumber)
+        {
+            var a = CallList.Where(x => (x.Call.To == phonenumber && x.CallStatus != CallStatus.Ended)).First();
+            return a;
         }
 
         private void HangUpThePhoneConnectionFromTheserver(CallInstance ci,string Reason)
         {
+            var v = new LogObj()
+            {
+                Caption = "X Server hung up call " + Reason,
+                LogSymbol = Code.LogSymbol.TwilioToPhone,
+                CallInstance = ci
+            };
 
-            SystemController.Instance.Logger.LogLine("[] -->  }   Call Hung up " + ci.CallOptions.To +  " "+Reason);
+
             SystemController.Instance.PhoneManager.CallHungUp(ci.CallOptions.To, Reason);
 
         }
 
 
-        protected string SendCallEndInErrorCallBack(CallInstance ci, NameValueCollection nvc,string Reason)
+        protected string SendCallEndStatus(CallInstance ci, NameValueCollection nvc,string Reason)
         {
             ci.CallStatus = CallStatus.CallbackSent;
             var a = "";
-            
+
+            var v = new LogObj()
+            {
+                LogSymbol = LogSymbol.TwilioToWeb,
+                CallInstance = ci,
+                Caption = "Call End Status to " + ci.CallBackurl+ " "+Reason 
+            };
+
+
             try
             {
+                v.AddNode("Request", nvc);
                  a = ci.BrowserClient.DoRequest(ci.CallOptions.StatusCallback, nvc);
-                SystemController.Instance.Logger.Log2Nodes("() <-- []   Call Connect Error start to " + ci.CallBackurl+ " "+Reason, "Request", nvc, "Response", a, false);
+                v.AddNode("Response", a);
+                
             }
             catch (Exception ex)
             {
-                SystemController.Instance.Logger.Log2Nodes("<- Exception on Call Start Call Back to " + ci.CallBackurl+ex.Message, "Request", nvc, "Response", a, false);
+                v.Caption = "<- Exception on Call Start Call Back to " + ci.CallBackurl+ex.Message ;
             }
+            SystemController.Instance.Logger.LogObj(v);
             ci.CallStatus = CallStatus.Ended;
             return a;
         }

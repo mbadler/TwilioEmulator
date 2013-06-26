@@ -61,8 +61,9 @@ namespace TwilioEmulator
                     break;
             }
 
-            SystemController.Instance.Logger.Log2Nodes("[] --> }   Dial Phone", "Incoming Number", PhoneNumber, "PhoneStatus", retStatus.ToString(), false);
-            return retStatus;
+            
+
+             return retStatus;
         }
 
          public void CallHungUp(string PhoneNumber, string Reason)
@@ -103,6 +104,7 @@ namespace TwilioEmulator
                     // we are assuming that the phone was hung up 
                     ResetPhone();
                 }
+                
                 _phoneStatus = value;
             }
         }
@@ -203,6 +205,7 @@ namespace TwilioEmulator
         private void HangupPhone()
         {
             PhoneStatus = DefaultPhoneStatus;
+            SystemController.Instance.Office.PhoneHungUp(currentPhoneNum);
 
         }
 
@@ -211,7 +214,7 @@ namespace TwilioEmulator
             btnStatus.Text = "Talking (Hang Up)";
             btnStatus.BackColor = Color.PowderBlue;
             PhoneStatus = PhoneStatus.Talking;
-            SystemController.Office.PhonePickedUp(currentPhoneNum,DefaultPhoneStatus == PhoneStatus.ReadyMachine?true:false);
+            SystemController.Instance.Office.PhonePickedUp(currentPhoneNum,DefaultPhoneStatus == PhoneStatus.ReadyMachine?true:false);
             
         }
 

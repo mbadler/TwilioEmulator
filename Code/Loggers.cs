@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace TwilioEmulator.Code
 {
     public interface ILogger
     {
-        void LogSimpleObject(object obj, string name);
-        void LogDictionaryOfObjects(string name ,Dictionary<string, object> LogObj);
-        void LogLine(string text);
+        void LogObj(LogObj logObj);
+        
     }
 
     public static class LoggerExtension
@@ -24,40 +24,27 @@ namespace TwilioEmulator.Code
 
         }
 
-        public static void Log2Nodes(this ILogger l,string name,string Node1Name,object node1object,string Node2Name,object node2object,bool LogAsError)
-        {
-            var a = new Dictionary<string, object>();
-            a.Add(Node1Name, node1object);
-            a.Add(Node2Name, node2object);
-            l.LogDictionaryOfObjects(name, a);
-        }
+        
     }
 
-    public class ConsoleLogger : ILogger
+
+    public class LogObj
     {
-        public void LogObject(object obj, string name)
-        {
-            Console.WriteLine("-- " + DateTime.Now.ToString() + " " + name);
-            Console.WriteLine(this.GetObjectText(obj));
-        }
 
-
-    
-        void ILogger.LogSimpleObject(object obj, string name)
+       
+        public string Caption { get; set; }
+        public CallInstance CallInstance { get; set; }
+        public LogSymbol LogSymbol { get; set; }
+        public List<KeyValuePair<string, object>> logObjs = new List<KeyValuePair<string, object>>();
+        public bool IsInError { get; set; }
+        public LogObj AddNode(string Key, object value)
         {
-            throw new NotImplementedException();
-        }
-
-        void ILogger.LogDictionaryOfObjects(string name, Dictionary<string, object> LogObj)
-        {
-            throw new NotImplementedException();
-        }
-
-        void ILogger.LogLine(string text)
-        {
-            throw new NotImplementedException();
+            logObjs.Add(new KeyValuePair<string, object>(Key, value));
+            return this;
         }
     }
+
+  
 
    
 }

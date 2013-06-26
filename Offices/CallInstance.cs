@@ -1,6 +1,8 @@
 ﻿using Twilio;
 using System.Collections.Generic;
 using System.Net;
+using System.Drawing;
+using System;
 
 namespace TwilioEmulator.Code
 {
@@ -16,6 +18,7 @@ namespace TwilioEmulator.Code
 
         public CallStatusWebClient BrowserClient = new CallStatusWebClient();
 
+        public Color CallColor;
 
         public bool IsNewCall { get; set; }
 
@@ -23,6 +26,8 @@ namespace TwilioEmulator.Code
         {
             IsNewCall = true;
             CallStatus = Code.CallStatus.Queued;
+            Random rand = new Random();
+            CallColor = Color.FromArgb(rand.Next(200,256), rand.Next(200,256), rand.Next(200,256));
         }
 
         public string LatestTwiml { get; set; }

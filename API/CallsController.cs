@@ -10,11 +10,19 @@ namespace TwilioEmulator.API
         public Call Post(CallOptions c)
         {
             var a = new Dictionary<string, object>();
-            a.Add("Request",c);
+            
 
-            var cl = SystemController.Office.NewCallRequest(c);
-            a.Add("Response",cl.Call);
-            SystemController.Instance.Logger.LogDictionaryOfObjects("() --> []  CallRequest",a);
+            var cl = SystemController.Instance.Office.NewCallRequest(c);
+            
+            var lg = new LogObj()
+            {
+                Caption = "Call request from application ",
+                LogSymbol = Code.LogSymbol.WebToTwilio,
+                CallInstance = cl
+            };
+
+            lg.AddNode("Request", c).AddNode("Response", cl.Call);
+            SystemController.Instance.Logger.LogObj(lg);
             return cl.Call;
         }
     }
