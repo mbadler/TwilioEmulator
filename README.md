@@ -20,6 +20,8 @@ Current Status
     - If the overall call status is set to busy,No-answer etc... then a callback is sent to the status url with that staus
     - The phone key pad starts to blink indicateing that the phone is ringing
     - Click the pickup phone button - the phone call connects
+    - There is a Auto Pickup" button to autmaticlly pick up calls
+    - If ifMachine="Hangup" is specified in the request then if the autoresponser state is set to machine then the phone is hung up automaticlly
     - A connect request Twiml is sent
   - All requests and responses are logged
 
