@@ -48,7 +48,7 @@ namespace TwilioEmulator.Offices
             // run thru each call and see what needs to be done with them
        
             CallList.Where(x=>
-                x.CallStatus==CallStatus.ProcessingCall||
+                x.CallStatus==CallStatus.ReadyForProcessing||
                 x.CallStatus==CallStatus.Queued||
                 x.CallStatus==CallStatus.WaitingRinging
                 ).AsParallel().ForAll(x=>
@@ -62,49 +62,20 @@ namespace TwilioEmulator.Offices
         {
             if (ci.CallStatus == CallStatus.Queued && ci.CallDirection == CallDirection.Out)
             {
-               
+               // start the phone call
                 ProcessCallPhone(ci);
             }
 
-            if (ci.CallStatus == CallStatus.ProcessingCall)
+            if (ci.CallStatus == CallStatus.ReadyForProcessing)
             {
-                // this is a first time request - goto the place specified in the url parameter
-               // run some twiml
+                // we are processing twiml
+                ci.FlowEngine.StartCallFlow();
 
             }
             
         }
 
-        private void ProcessDoTwimlRequest(CallInstance ci,string UrlToUse,string LogAs)
-        {
-            ci.CallStatus = CallStatus.CallbackSent;
-            var a = "";
-            var nvc = ci.GenerateCallBackValue();
-            var v = new LogObj()
-            {
-                LogSymbol = LogSymbol.TwilioToWeb,
-                CallInstance = ci,
-                Caption = LogAs+" to "+ UrlToUse
-            };
-
-
-
-            try
-            {
-                a = ci.BrowserClient.DoRequest(UrlToUse,nvc);
-                v.AddNode("Request", nvc).AddNode("Response", a);
-
-                ci.LatestTwiml = a;
-            }
-            catch (Exception ex)
-            {
-                v.Caption = "<- Exception on Call Start Call Back to " + ci.CallBackurl + ex.Message;
-               
-            }
-            SystemController.Instance.Logger.LogObj(v);
-            ci.CallStatus = CallStatus.ProcessingCall;
-
-        }
+        
 
         private void ProcessCallPhone(CallInstance ci)
         {
@@ -215,8 +186,9 @@ namespace TwilioEmulator.Offices
                 }
             }
 
-            a.Call.Status = TwilioCallStatuses.INPROGRESS;
-            ProcessDoTwimlRequest(a, a.CallOptions.Url, "Get Welcome message Twiml");
+
+            a.CallStatus = CallStatus.ReadyForProcessing;
+            //ProcessDoTwimlRequest(a, a.CallOptions.Url, "Get Welcome message Twiml");
 
         }
 

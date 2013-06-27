@@ -28,12 +28,17 @@ namespace TwilioEmulator.Code
             CallStatus = Code.CallStatus.Queued;
             Random rand = new Random();
             CallColor = Color.FromArgb(rand.Next(200,256), rand.Next(200,256), rand.Next(200,256));
+            FlowEngine = new CallFlowEngine() { MyCall = this };
         }
 
-        public string LatestTwiml { get; set; }
+        public CallFlowEngine FlowEngine = null;
 
         public string CallBackurl { get; set; }
 
+        public void StartCallFlow()
+        {
+            FlowEngine.StartCallFlow();
+        }
         //public DateTime LastAction { get; set; }
     }
 
@@ -56,15 +61,15 @@ public enum CallStatus
     /// </summary>
     WaitingRinging,
     /// <summary>
-    /// Don't Process - we are cusrrently dealing iwith things
+    /// Call is all connected ane we are ready to start the flow engine
     /// </summary>
-    LocalProcessing,
+    ReadyForProcessing,
     /// <summary>
     /// we sent a callback to the server  - don't process
     /// </summary>
     CallbackSent,
     /// <summary>
-    ///  we got some teiml or something - process
+    ///  Call Flow is processing
     /// </summary>
     ProcessingCall,
     Ended
