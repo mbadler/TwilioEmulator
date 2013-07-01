@@ -33,13 +33,14 @@ namespace TwilioEmulator.Code
             // start as a new thread
             VerbFunctions.Add(Pause);
             VerbFunctions.Add(Hangup);
+            VerbFunctions.Add(Redirect);
 
             MyCall.CallStatus = CallStatus.ProcessingCall;
             Task.Factory.StartNew(() =>
                 {
 
                     TwimlPath = MyCall.CallOptions.Url;
-                    TwimlLogAs = "Inital Call";
+                    TwimlLogAs = "Initial Call";
                     // get the introductory twiml
                     // start procesing
                     while (MyCall.CallStatus != CallStatus.Ended)
@@ -55,11 +56,18 @@ namespace TwilioEmulator.Code
 
         private void ProcessReceivedTwiml()
         {
+            var curl = this.TwimlPath;
             foreach (var node in TwimlVerbs())
             {
+                // Mark what the current url should be - if that changes then pop out and let the rerequset happen
+                
                 // find the right delegate and execute it
                 if (MyCall.CallStatus != CallStatus.Ended)
                 {
+                    if (curl != TwimlPath)
+                    {
+                        return;
+                    }
                     VerbFunctions.Where(x => x.Method.Name.ToUpper() == node.Name.ToString().ToUpper()).First()(node);
                 }
             }
@@ -120,7 +128,7 @@ namespace TwilioEmulator.Code
                 {
                     return;
                 }
-                Thread.Sleep(len * 500);
+                Thread.Sleep(500);
 
             }
             
@@ -129,6 +137,12 @@ namespace TwilioEmulator.Code
         protected void Hangup(XElement twimnode)
         {
             SystemController.Instance.Office.HangupCallRequest(this.MyCall, "FromTwiml");
+
+        }
+
+        protected void Redirect(XElement twimnode)
+        {
+            TwimlPath = twimnode.Value;
 
         }
 
