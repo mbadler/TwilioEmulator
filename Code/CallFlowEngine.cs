@@ -32,6 +32,8 @@ namespace TwilioEmulator.Code
         {
             // start as a new thread
             VerbFunctions.Add(Pause);
+            VerbFunctions.Add(Hangup);
+
             MyCall.CallStatus = CallStatus.ProcessingCall;
             Task.Factory.StartNew(() =>
                 {
@@ -56,7 +58,10 @@ namespace TwilioEmulator.Code
             foreach (var node in TwimlVerbs())
             {
                 // find the right delegate and execute it
-                VerbFunctions.Where(x => x.Method.Name.ToUpper() == node.Name.ToString().ToUpper()).First()(node);
+                if (MyCall.CallStatus != CallStatus.Ended)
+                {
+                    VerbFunctions.Where(x => x.Method.Name.ToUpper() == node.Name.ToString().ToUpper()).First()(node);
+                }
             }
         }
         
@@ -108,9 +113,25 @@ namespace TwilioEmulator.Code
         protected void Pause(XElement twimnode)
         {
             var len = int.Parse(twimnode.Attribute("length").Value);
+            for (int i = 0; i <= len*2; i++)
+            {
+                // we need to keep it responsive in case the call is shut down
+                if (MyCall.CallStatus == CallStatus.Ended)
+                {
+                    return;
+                }
+                Thread.Sleep(len * 500);
 
-            Thread.Sleep(len * 1000);
+            }
+            
         }
+
+        protected void Hangup(XElement twimnode)
+        {
+            SystemController.Instance.Office.HangupCallRequest(this.MyCall, "FromTwiml");
+
+        }
+
         #endregion
     }
 

@@ -46,7 +46,7 @@ namespace TwilioEmulator.Offices
 
         internal void HangupCallRequest(CallInstance d, string stat)
         {
-            HangUpThePhoneConnectionFromTheserver(d, "API Requested");
+            HangUpThePhoneConnectionFromTheserver(d, stat);
         }
         #endregion
 

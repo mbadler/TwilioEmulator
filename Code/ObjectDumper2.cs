@@ -68,21 +68,21 @@ namespace TwilioEmulator.Code
                 {
                     string str6 = str4.Replace("\t", "\\t").Replace("\n", "\\n").Replace("\r", "\\r");
                     int length = str6.Length;
-                    if (length > 80)
-                        str6 = str6.Substring(0, 80);
+                    //if (length > 80)
+                    //    str6 = str6.Substring(0, 80);
                     if (flag)
                         str6 = string.Format((IFormatProvider)CultureInfo.InvariantCulture, "\"{0}\"", new object[1]
             {
               (object) str6
             });
-                    if (length > 80)
-                        str6 = string.Concat(new object[4]
-            {
-              (object) str6,
-              (object) " (+",
-              (object) (length - 80),
-              (object) " chars)"
-            });
+            //        if (length > 80)
+            //            str6 = string.Concat(new object[4]
+            //{
+            //  (object) str6,
+            //  (object) " (+",
+            //  (object) (length - 80),
+            //  (object) " chars)"
+            //});
                     str5 = " = " + str6;
                 }
                 writer.WriteLine("{0}{1}{2}{3} [{4}]{5}", (object)str1, (object)str3, (object)name, (object)str5, (object)value.GetType(), (object)str2);
