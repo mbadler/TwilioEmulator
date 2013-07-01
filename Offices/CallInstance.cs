@@ -8,7 +8,38 @@ namespace TwilioEmulator.Code
 {
     public class CallInstance : object
     {
-        public Call Call { get; set; }
+        Call Call { get; set; }
+        public Call CallForGet
+        {
+            get
+            {
+                return Call;
+            }
+            
+        }
+
+       public Call CallForSet
+        {
+            get
+            {
+                Call.DateUpdated = DateTime.Now;
+                return Call;
+            }
+          
+        }
+
+       public Call CallForCreate
+       {
+           get
+           {
+               return Call;
+           }
+           set
+           {
+               Call = value;
+           }
+       }
+        
         public CallDirection CallDirection { get; set; } 
 
         public CallStatus CallStatus { get; set; }

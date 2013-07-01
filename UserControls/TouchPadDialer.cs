@@ -68,7 +68,10 @@ namespace TwilioEmulator
 
          public void CallHungUp(string PhoneNumber, string Reason)
         {
-            PhoneStatus = DefaultPhoneStatus; 
+            this.BeginInvoke((Action)(() =>
+          {
+              PhoneStatus = DefaultPhoneStatus;
+          }));
         }
 
 

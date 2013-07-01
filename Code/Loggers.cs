@@ -42,6 +42,11 @@ namespace TwilioEmulator.Code
             logObjs.Add(new KeyValuePair<string, object>(Key, value));
             return this;
         }
+        public LogObj LogIt()
+        {
+            SystemController.Instance.Logger.LogObj(this);
+            return this;
+        }
     }
 
   

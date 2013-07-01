@@ -67,14 +67,21 @@ namespace TwilioEmulator.Code
             string port = Settings.Default.Port;
             HttpSelfHostConfiguration configuration = new HttpSelfHostConfiguration("http://localhost:" + port);
 
-            string routeTemplate1 = "2010-04-01/Accounts/{sid}/{controller}.json/{id}";
-            string routeTemplate2 = "2010-04-01/Accounts/{sid}/{controller}/{id}";
-            object defaults = (object)new
+            string ModifyTemplate1 = "2010-04-01/Accounts/{sid}/{controller}/{id}.json";
+            string ModifyTemplate2 = "2010-04-01/Accounts/{sid}/{controller}/{id}";
+            object modifydefaults = (object)new
             {
-                id = RouteParameter.Optional
+                action = "Modify"
             };
-            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "Default", routeTemplate1, defaults);
-            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "Direct", routeTemplate2, defaults);
+
+            string routeTemplate1 = "2010-04-01/Accounts/{sid}/{controller}.json";
+            string routeTemplate2 = "2010-04-01/Accounts/{sid}/{controller}";
+
+
+            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "ModifyDefault", ModifyTemplate1, modifydefaults);
+            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "ModifyDirect", ModifyTemplate2, modifydefaults);
+            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "Default", routeTemplate1);
+            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "Direct", routeTemplate2);
             
             JsonMediaTypeFormatter jsonFormatter = configuration.Formatters.JsonFormatter;
             JsonSerializerSettings jSettings = new Newtonsoft.Json.JsonSerializerSettings()

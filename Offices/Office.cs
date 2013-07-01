@@ -19,11 +19,12 @@ namespace TwilioEmulator.Offices
         public List<CallInstance> CallList = new List<CallInstance>();
 
 
+        #region API Requests
         public CallInstance NewCallRequest(CallOptions co)
         {
             CallInstance c = new CallInstance()
             {
-                Call = new Call()
+                CallForCreate = new Call()
                 {
                     Sid = Guid.NewGuid().ToString().Replace("-", ""),
                     Status = TwilioCallStatuses.QUEUED,
@@ -42,6 +43,12 @@ namespace TwilioEmulator.Offices
             CallList.Add(c);
             return c;
         }
+
+        internal void HangupCallRequest(CallInstance d, string stat)
+        {
+            HangUpThePhoneConnectionFromTheserver(d, "API Requested");
+        }
+        #endregion
 
         protected override void Process()
         {
@@ -85,8 +92,9 @@ namespace TwilioEmulator.Offices
             
             Boolean Callok = false;
 
-            var c = ci.Call;
-            var v = SystemController.Instance.PhoneManager.AttemptDial(ci.Call.To);
+            
+            var c = ci.CallForGet;
+            var v = SystemController.Instance.PhoneManager.AttemptDial(ci.CallForGet.To);
                  SystemController.Instance.Logger.LogObj(new  LogObj()
             {
                 Caption = "Dial to Phone",
@@ -99,24 +107,24 @@ namespace TwilioEmulator.Offices
 
                 case PhoneStatus.Busy:
                     {
-                        c.Status = TwilioCallStatuses.BUSY;
+                        ci.CallForSet.Status = TwilioCallStatuses.BUSY;
 
                         break;
                     }
                 case PhoneStatus.Ringing:
                     {
                         Callok = true;
-                        c.Status = TwilioCallStatuses.RINGING;
+                        ci.CallForSet.Status = TwilioCallStatuses.RINGING;
                         break;
                     }
                 case PhoneStatus.NotInService:
                     {
-                        c.Status = TwilioCallStatuses.FAILED;
+                        ci.CallForSet.Status = TwilioCallStatuses.FAILED;
                         break;
                     }
                 case PhoneStatus.NoAnswer:
                     {
-                        c.Status = TwilioCallStatuses.NOANSWER;
+                        ci.CallForSet.Status = TwilioCallStatuses.NOANSWER;
                         break;
                     }
                 default:
@@ -126,7 +134,7 @@ namespace TwilioEmulator.Offices
             // else mark it as waiting for the phone
             if (!Callok)
             {
-                ci.CallStatus = CallStatus.Ended;
+                MarkCallEnded(ci);
                 SendCallEndStatus(ci, ci.GenerateCallBackValue(), c.Status);
             }
             else
@@ -148,10 +156,26 @@ namespace TwilioEmulator.Offices
 
 
             SystemController.Instance.Logger.LogObj(v);
-            a.Call.Status = TwilioCallStatuses.COMPLETED;
+            MarkCallEnded(a);
             SendCallEndStatus(a, a.GenerateCallBackValue(), "Hung up");
-            a.CallStatus = CallStatus.Ended;
+            
         }
+
+
+        public void MarkCallEnded(CallInstance ci)
+        {
+            var a = ci.CallForSet;
+            if (a.Status == TwilioCallStatuses.INPROGRESS)
+            {
+                a.EndTime = DateTime.Now;
+                a.Duration = (DateTime.Now - a.DateCreated).Seconds;
+            }
+            a.Status = TwilioCallStatuses.COMPLETED;
+           ci.CallStatus = CallStatus.Ended;
+
+            
+        }
+
 
         public void PhonePickedUp(string phonenumber, bool IsMachine)
         {
@@ -170,16 +194,16 @@ namespace TwilioEmulator.Offices
             {
                 if (!IsMachine)
                 {
-                    a.Call.AnsweredBy = "Human";
+                    a.CallForSet.AnsweredBy = "Human";
                 }
                 else
                 {
-                    a.Call.AnsweredBy = "Machine";
+                    a.CallForSet.AnsweredBy = "Machine";
                     if (a.CallOptions.IfMachine == "Hangup")
                     {
                         HangUpThePhoneConnectionFromTheserver(a, "Answered by machine");
                         SendCallEndStatus(a, a.GenerateCallBackValue(), "Answered by answering machine");
-                        a.CallStatus = CallStatus.Ended;
+                        
                         return;
                     }
 
@@ -192,11 +216,7 @@ namespace TwilioEmulator.Offices
 
         }
 
-        public CallInstance GetCallInstanceFromPhoneNumber(string phonenumber)
-        {
-            var a = CallList.Where(x => (x.Call.To == phonenumber && x.CallStatus != CallStatus.Ended)).First();
-            return a;
-        }
+       
 
         private void HangUpThePhoneConnectionFromTheserver(CallInstance ci,string Reason)
         {
@@ -205,9 +225,9 @@ namespace TwilioEmulator.Offices
                 Caption = "X Server hung up call " + Reason,
                 LogSymbol = Code.LogSymbol.TwilioToPhone,
                 CallInstance = ci
-            };
+            }.LogIt();
 
-
+            MarkCallEnded(ci);
             SystemController.Instance.PhoneManager.CallHungUp(ci.CallOptions.To, Reason);
 
         }
@@ -240,8 +260,27 @@ namespace TwilioEmulator.Offices
             SystemController.Instance.Logger.LogObj(v);
             ci.CallStatus = CallStatus.Ended;
             return a;
+        } 
+        
+        
+        #region Search Phone List
+        public CallInstance GetCallInstanceFromPhoneNumber(string phonenumber)
+        {
+            var a = CallList.Where(x => (x.CallForGet.To == phonenumber && x.CallStatus != CallStatus.Ended)).First();
+            return a;
         }
+
+        public CallInstance GetCallInstanceFromCallSid(string sid)
+        {
+            sid = sid.ToUpper();
+            var a = CallList.Where(x => (x.CallForGet.Sid.ToUpper()==sid)).FirstOrDefault();
+            return a;
+        }
+#endregion
+
+       
     }
 
    
+
 }
