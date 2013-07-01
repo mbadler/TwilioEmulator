@@ -23,6 +23,7 @@ Current Status
     - There is a Auto Pickup" button to autmaticlly pick up calls
     - If ifMachine="Hangup" is specified in the request then if the autoresponser state is set to machine then the phone is hung up automaticlly
     - A connect request Twiml is sent
+    - Requests are sent to the url - Only the Pause Verb currenly works
   - All requests and responses are logged
 
 
