@@ -24,21 +24,28 @@ Current Status
     - If ifMachine="Hangup" is specified in the request then if the autoresponser state is set to machine then the phone is hung up automaticlly
     - A connect request Twiml is sent
     - Requests are sent to the url - Only the Pause Verb currenly works
+  - GET to call/sid.json will return the call status
+  - Post to call/sid.json will termintate the call
   - All requests and responses are logged
 
 
-Twiml Verbs Supported (Planned)
+Twiml Verbs Support
 -------------------------------
 
+The following Twiml are planned for support :
 
-  - Say - Read text to the caller _(via output to the log file or perhaps TTS)_
-  - Play - Play an audio file for the caller _(via a message on the log stating that the file would be palyed , maybe in the future we will actually download the file and play it over the speaker)_
-  - Gather - Collect digits the caller types on their keypad
-  - Sms - Send an SMS message during a phone call _(A message displayed in the log will indeicate it was sent)_
-  - Hangup - Hang up the call
-  - Redirect - Redirect call flow to a different TwiML document.
-  - Pause - Wait before executing more instructions
-  - Reject - Decline an incoming call without being billed.
+
+
+| Verb | Current Status | Remarks |
+| --- | ---| ---|
+|`Say`| |Read text to the caller _(via output to the log file or perhaps TTS)_
+|`Play`| |Play an audio file for the caller _(via a message on the log stating that the file would be palyed , maybe in the future we will actually download the file and play it over the speaker)_
+| `Gather` | | Collect digits the caller types on their keypad
+| `Sms` | | Send an SMS message during a phone call _(A message displayed in the log will indeicate it was sent)_
+| `Hangup` | Soon | Hang up the call
+| `Redirect` | | Redirect call flow to a different TwiML document.
+| `Pause` | Implemented | Wait before executing more instructions
+| `Reject` | | Decline an incoming call without being billed.
 
 
 #### Concurrent Phone Calls: ####
@@ -84,4 +91,4 @@ __Manual Phone Statuses:__
 The twilio rest client has the address to the twilio servers hard coded. To acess the emulator on local host you can use the TwilioTestClient.cs class which uses reflection to change the underlying address
 
   
-Updated 6/25/2013
+Updated 7/1/2013
