@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwilioEmulator", "TwilioEmulator.csproj", "{B26D460C-83E6-432F-BB5F-6C107FA6DDB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwimlTester", "..\TwimlTester\TwimlTester.csproj", "{33327056-6C81-4FEE-AAF4-5169E2B2097A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{B26D460C-83E6-432F-BB5F-6C107FA6DDB1}.Debug|x86.Build.0 = Debug|x86
 		{B26D460C-83E6-432F-BB5F-6C107FA6DDB1}.Release|x86.ActiveCfg = Release|x86
 		{B26D460C-83E6-432F-BB5F-6C107FA6DDB1}.Release|x86.Build.0 = Release|x86
+		{33327056-6C81-4FEE-AAF4-5169E2B2097A}.Debug|x86.ActiveCfg = Debug|x86
+		{33327056-6C81-4FEE-AAF4-5169E2B2097A}.Debug|x86.Build.0 = Debug|x86
+		{33327056-6C81-4FEE-AAF4-5169E2B2097A}.Release|x86.ActiveCfg = Release|x86
+		{33327056-6C81-4FEE-AAF4-5169E2B2097A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

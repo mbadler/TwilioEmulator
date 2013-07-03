@@ -21,7 +21,7 @@ namespace TwilioEmulator
 
         #region IPhoneManager Implements
 
-        string currentPhoneNum = "";
+      
 
         public IPhoneInteractionLogger phonelog = null;
         
@@ -76,17 +76,23 @@ namespace TwilioEmulator
               PhoneStatus = DefaultPhoneStatus;
           }));
         }
+         void IPhoneManager.SayReceived(string PhoneNumber, string Text)
+         {
+             phonelog.LogInteraction(InteractionWho.server, InteractionWhat.Say, SystemColors.Desktop, Text);
+         }
 
+        
+         
+        #endregion 
 
-         private PhoneStatus _defaultPhoneStatus = PhoneStatus.ReadyHuman;
+  string currentPhoneNum = "";
+        private PhoneStatus _defaultPhoneStatus = PhoneStatus.ReadyHuman;
 
          public PhoneStatus DefaultPhoneStatus
          {
              get { return _defaultPhoneStatus; }
              set { _defaultPhoneStatus = value; }
          }
-         
-        
         PhoneStatus _phoneStatus = PhoneStatus.ReadyHuman; 
         public PhoneStatus PhoneStatus
         {
@@ -121,7 +127,7 @@ namespace TwilioEmulator
             btnStatus.Text = "Dial Number";
         }
 
-        #endregion
+        
 
         public void StartPhoneRinging()
         {
@@ -260,6 +266,7 @@ namespace TwilioEmulator
         }
 
 
-       
+
+        
     }
 }

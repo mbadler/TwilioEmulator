@@ -101,10 +101,7 @@ namespace TwilioEmulator.Code
         internal void StartCallFlow()
         {
             // start as a new thread
-            VerbFunctions.Add(Pause);
-            VerbFunctions.Add(Hangup);
-            VerbFunctions.Add(Redirect);
-            VerbFunctions.Add(Gather);
+            PopulateVerbFunctions();
 
             MyCall.CallStatus = CallStatus.ProcessingCall;
             Task.Factory.StartNew(() =>
@@ -132,6 +129,8 @@ namespace TwilioEmulator.Code
                 }
                  , TaskCreationOptions.LongRunning);
         }
+
+       
 
         private TwimlVerbResult ProcessReceivedTwiml()
         {
@@ -200,6 +199,37 @@ namespace TwilioEmulator.Code
         }
 
         #region Twiml Verb Functions
+
+        private void PopulateVerbFunctions()
+        {
+            VerbFunctions.Add(Pause);
+            VerbFunctions.Add(Hangup);
+            VerbFunctions.Add(Redirect);
+            VerbFunctions.Add(Gather);
+            VerbFunctions.Add(Say);
+        }
+
+        protected TwimlVerbResult Say(XElement twimnode)
+        {
+             var words = twimnode.Value;
+             var a = new LogObj()
+             {
+                 Caption = "Twiml Say: "+words,
+                 LogSymbol = LogSymbol.TwilioToPhone,
+                 CallInstance = MyCall
+             }.LogIt();
+
+            
+            foreach (var wd in twimnode.Value.Split(' '))
+            {
+                SystemController.Instance.Office.SayToPhone(MyCall, wd);
+                Thread.Sleep(200);
+            }
+            
+            return TwimlVerbResult.Continue;
+
+        }
+
         protected TwimlVerbResult Pause(XElement twimnode)
         {
             var len = int.Parse(twimnode.Attribute("length").Value);

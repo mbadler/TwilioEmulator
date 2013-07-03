@@ -276,8 +276,12 @@ namespace TwilioEmulator.Offices
             SystemController.Instance.Logger.LogObj(v);
             ci.CallStatus = CallStatus.Ended;
             return a;
-        } 
-        
+        }
+
+        public void SayToPhone(CallInstance ci, string Word)
+        {
+            SystemController.Instance.PhoneManager.SayReceived(ci.CallOptions.To, Word);
+        }
         
         #region Search Phone List
         public CallInstance GetCallInstanceFromPhoneNumber(string phonenumber)
