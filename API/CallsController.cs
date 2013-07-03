@@ -61,7 +61,7 @@ namespace TwilioEmulator.API
                      CallInstance = d
                  }.AddNode("Request",request);
 
-                 SystemController.Instance.Office.HangupCallRequest(d, stat);
+                 SystemController.Instance.Office.MarkCallEnded(d, stat,true);
                  lg.AddNode("Response", d).LogIt();
                  
              }

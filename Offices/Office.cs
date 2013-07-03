@@ -44,7 +44,7 @@ namespace TwilioEmulator.Offices
             return c;
         }
 
-        internal void HangupCallRequest(CallInstance d, string stat)
+        private void HangupCallRequest(CallInstance d, string stat)
         {
             HangUpThePhoneConnectionFromTheserver(d, stat);
         }
@@ -134,8 +134,8 @@ namespace TwilioEmulator.Offices
             // else mark it as waiting for the phone
             if (!Callok)
             {
-                MarkCallEnded(ci);
-                SendCallEndStatus(ci, ci.GenerateCallBackValue(), c.Status);
+                MarkCallEnded(ci,"Phone in status "+c.Status.ToString(),false);
+               
             }
             else
             {
@@ -156,13 +156,13 @@ namespace TwilioEmulator.Offices
 
 
             SystemController.Instance.Logger.LogObj(v);
-            MarkCallEnded(a);
-            SendCallEndStatus(a, a.GenerateCallBackValue(), "Hung up");
+            MarkCallEnded(a,"Hung up",false);
+            
             
         }
 
 
-        public void MarkCallEnded(CallInstance ci)
+        public void MarkCallEnded(CallInstance ci,string reason,bool FromTheServer)
         {
             var a = ci.CallForSet;
             if (a.Status == TwilioCallStatuses.INPROGRESS)
@@ -173,6 +173,11 @@ namespace TwilioEmulator.Offices
             a.Status = TwilioCallStatuses.COMPLETED;
            ci.CallStatus = CallStatus.Ended;
 
+           if (FromTheServer)
+           {
+               HangUpThePhoneConnectionFromTheserver(ci, reason);
+           }
+            SendCallEndStatus(ci, ci.GenerateCallBackValue(), reason);
             
         }
 
@@ -201,8 +206,9 @@ namespace TwilioEmulator.Offices
                     a.CallForSet.AnsweredBy = "Machine";
                     if (a.CallOptions.IfMachine == "Hangup")
                     {
-                        HangUpThePhoneConnectionFromTheserver(a, "Answered by machine");
-                        SendCallEndStatus(a, a.GenerateCallBackValue(), "Answered by answering machine");
+                        
+                        MarkCallEnded(a,"Answered by answering machine",true);
+                       
                         
                         return;
                     }
@@ -227,7 +233,7 @@ namespace TwilioEmulator.Offices
                 CallInstance = ci
             }.LogIt();
 
-            MarkCallEnded(ci);
+ 
             SystemController.Instance.PhoneManager.CallHungUp(ci.CallOptions.To, Reason);
 
         }

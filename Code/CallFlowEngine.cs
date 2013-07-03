@@ -43,18 +43,22 @@ namespace TwilioEmulator.Code
                     TwimlLogAs = "Initial Call";
                     // get the introductory twiml
                     // start procesing
-                    while (MyCall.CallStatus != CallStatus.Ended)
+                    TwimlVerbResult tvr = TwimlVerbResult.Redirect;
+                    while (MyCall.CallStatus != CallStatus.Ended  && tvr == TwimlVerbResult.Redirect)
                     {
                         DoTwimlRequest(TwimlPath ,TwimlLogAs);
-                        ProcessReceivedTwiml();
+                        TwimlPath = "";
+                        tvr = ProcessReceivedTwiml();
                     }
+
+                    SystemController.Instance.Office.MarkCallEnded(MyCall,"Twiml Execution ended",true);
                     
 
                 }
                  , TaskCreationOptions.LongRunning);
         }
 
-        private void ProcessReceivedTwiml()
+        private TwimlVerbResult ProcessReceivedTwiml()
         {
             var curl = this.TwimlPath;
             foreach (var node in TwimlVerbs())
@@ -62,15 +66,17 @@ namespace TwilioEmulator.Code
                 // Mark what the current url should be - if that changes then pop out and let the rerequset happen
                 
                 // find the right delegate and execute it
-                if (MyCall.CallStatus != CallStatus.Ended)
-                {
-                    if (curl != TwimlPath)
-                    {
-                        return;
-                    }
-                    VerbFunctions.Where(x => x.Method.Name.ToUpper() == node.Name.ToString().ToUpper()).First()(node);
-                }
+                
+                 TwimlVerbResult tvr =   VerbFunctions.Where(x => x.Method.Name.ToUpper() == node.Name.ToString().ToUpper()).First()(node);
+                 if (tvr != TwimlVerbResult.Continue)
+                 {
+                     return tvr;
+                 }
+
+                
             }
+            return TwimlVerbResult.Continue;
+
         }
         
 
@@ -109,8 +115,8 @@ namespace TwilioEmulator.Code
             }
             catch (Exception ex)
             {
-                v.AddNode("TWiml Error","Error parsing Twiml "+ex.Message+ " Defaulting to a 5 seconds pause").IsInError = true;
-                Twiml = XDocument.Parse(@"<?xml version=""1.0"" encoding=""UTF-8"" ?><Response><Pause length=""10""/></Response>");
+                v.AddNode("TWiml Error","Error parsing Twiml "+ex.Message+ " Defaulting to a blank document").IsInError = true;
+                Twiml = XDocument.Parse(@"<?xml version=""1.0"" encoding=""UTF-8"" ?><Response></Response>");
             }
             SystemController.Instance.Logger.LogObj(v);
 
@@ -118,7 +124,7 @@ namespace TwilioEmulator.Code
         }
 
         #region Twiml Verb Functions
-        protected void Pause(XElement twimnode)
+        protected TwimlVerbResult Pause(XElement twimnode)
         {
             var len = int.Parse(twimnode.Attribute("length").Value);
             for (int i = 0; i <= len*2; i++)
@@ -126,28 +132,41 @@ namespace TwilioEmulator.Code
                 // we need to keep it responsive in case the call is shut down
                 if (MyCall.CallStatus == CallStatus.Ended)
                 {
-                    return;
+                    return TwimlVerbResult.EndCall;
                 }
                 Thread.Sleep(500);
 
             }
+            return TwimlVerbResult.Continue;
             
         }
 
-        protected void Hangup(XElement twimnode)
+        protected TwimlVerbResult Hangup(XElement twimnode)
         {
-            SystemController.Instance.Office.HangupCallRequest(this.MyCall, "FromTwiml");
+            SystemController.Instance.Office.MarkCallEnded(this.MyCall, "FromTwiml",true);
+            return TwimlVerbResult.EndCall;
 
         }
 
-        protected void Redirect(XElement twimnode)
+        protected TwimlVerbResult Redirect(XElement twimnode)
         {
             TwimlPath = twimnode.Value;
+            TwimlLogAs = "Twiml Redirect verb ";
+            return TwimlVerbResult.Redirect;
 
         }
 
         #endregion
     }
 
-    public delegate void TwimlVerbFunction(XElement twimnode);
+    public delegate TwimlVerbResult TwimlVerbFunction(XElement twimnode);
+
+
+}
+
+public enum TwimlVerbResult
+{
+    Continue,
+    EndCall,
+    Redirect
 }
