@@ -28,16 +28,8 @@ namespace TwilioEmulator
 
             this.lblServerHeader.Text = "Emulator Server - Port: " + SystemController.Instance.ActivePort.ToString();
 
+            touchPadDialer1.phonelog = callInteractionLogger1;
         }
-        
-        
-
-
-
-
-       
-
-       
 
         private void ddAnswerMode_Click(object sender, EventArgs e)
         {
@@ -92,6 +84,11 @@ namespace TwilioEmulator
                  }
                  );
             }));
+        }
+
+        private void lblServerHeader_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

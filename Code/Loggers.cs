@@ -47,6 +47,13 @@ namespace TwilioEmulator.Code
             SystemController.Instance.Logger.LogObj(this);
             return this;
         }
+
+        public LogObj AddException(Exception ex)
+        {
+            string Ex = ex.ToString();
+            logObjs.Add(new KeyValuePair<string, object>("Exception", ex));
+            return this;
+        }
     }
 
   

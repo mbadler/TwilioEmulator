@@ -47,6 +47,8 @@
             this.btnStatus = new System.Windows.Forms.Button();
             this.tbScript = new System.Windows.Forms.TabPage();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.lblBuffer = new System.Windows.Forms.Label();
+            this.tmrDial = new System.Windows.Forms.Timer(this.components);
             this.tbTouchPad.SuspendLayout();
             this.tbKeyPad.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -119,6 +121,7 @@
             this.btn1.TabIndex = 0;
             this.btn1.Text = "1";
             this.btn1.UseVisualStyleBackColor = true;
+            this.btn1.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn2
             // 
@@ -131,6 +134,7 @@
             this.btn2.TabIndex = 1;
             this.btn2.Text = "2\r\nABC";
             this.btn2.UseVisualStyleBackColor = true;
+            this.btn2.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn3
             // 
@@ -143,6 +147,7 @@
             this.btn3.TabIndex = 2;
             this.btn3.Text = "3\r\nDEF";
             this.btn3.UseVisualStyleBackColor = true;
+            this.btn3.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn4
             // 
@@ -155,6 +160,7 @@
             this.btn4.TabIndex = 4;
             this.btn4.Text = "4\r\nGHI";
             this.btn4.UseVisualStyleBackColor = true;
+            this.btn4.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn5
             // 
@@ -167,6 +173,7 @@
             this.btn5.TabIndex = 4;
             this.btn5.Text = "5\r\nJKL";
             this.btn5.UseVisualStyleBackColor = true;
+            this.btn5.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn6
             // 
@@ -179,6 +186,7 @@
             this.btn6.TabIndex = 5;
             this.btn6.Text = "6\r\nMNO";
             this.btn6.UseVisualStyleBackColor = true;
+            this.btn6.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn7
             // 
@@ -191,6 +199,7 @@
             this.btn7.TabIndex = 6;
             this.btn7.Text = "7\r\nPQRS";
             this.btn7.UseVisualStyleBackColor = true;
+            this.btn7.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn8
             // 
@@ -203,6 +212,7 @@
             this.btn8.TabIndex = 7;
             this.btn8.Text = "8\r\nTUV";
             this.btn8.UseVisualStyleBackColor = true;
+            this.btn8.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn9
             // 
@@ -215,6 +225,7 @@
             this.btn9.TabIndex = 8;
             this.btn9.Text = "9\r\nWXYZ";
             this.btn9.UseVisualStyleBackColor = true;
+            this.btn9.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btnAsterik
             // 
@@ -227,6 +238,7 @@
             this.btnAsterik.TabIndex = 9;
             this.btnAsterik.Text = "*";
             this.btnAsterik.UseVisualStyleBackColor = true;
+            this.btnAsterik.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btnHash
             // 
@@ -239,6 +251,7 @@
             this.btnHash.TabIndex = 10;
             this.btnHash.Text = "#";
             this.btnHash.UseVisualStyleBackColor = true;
+            this.btnHash.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn0
             // 
@@ -251,6 +264,7 @@
             this.btn0.TabIndex = 11;
             this.btn0.Text = "0";
             this.btn0.UseVisualStyleBackColor = true;
+            this.btn0.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btnStatus
             // 
@@ -278,10 +292,26 @@
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // lblBuffer
+            // 
+            this.lblBuffer.AutoSize = true;
+            this.lblBuffer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblBuffer.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lblBuffer.Location = new System.Drawing.Point(0, 451);
+            this.lblBuffer.Name = "lblBuffer";
+            this.lblBuffer.Size = new System.Drawing.Size(2, 15);
+            this.lblBuffer.TabIndex = 4;
+            // 
+            // tmrDial
+            // 
+            this.tmrDial.Interval = 1000;
+            this.tmrDial.Tick += new System.EventHandler(this.tmrDial_Tick);
+            // 
             // TouchPadDialer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblBuffer);
             this.Controls.Add(this.tbTouchPad);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "TouchPadDialer";
@@ -290,6 +320,7 @@
             this.tbKeyPad.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -313,5 +344,7 @@
         private System.Windows.Forms.Button btnStatus;
         private System.Windows.Forms.TabPage tbScript;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label lblBuffer;
+        private System.Windows.Forms.Timer tmrDial;
     }
 }

@@ -92,6 +92,8 @@
     <Compile Include="API\Infrastructure\BaseController.cs" />
     <Compile Include="Code\CallFlowEngine.cs" />
     <Compile Include="Code\Extensions\CallExtentions.cs" />
+    <Compile Include="Code\Extensions\Linq2XMLExtensions.cs" />
+    <Compile Include="Code\IPhoneInteractionLogger.cs" />
     <Compile Include="Code\LogSymbol.cs" />
     <Compile Include="Code\TwilioCallStatuses.cs" />
     <Compile Include="Offices\CallInstance.cs" />
@@ -117,6 +119,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\CallInteractionLogger.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\CallInteractionLogger.Designer.cs">
+      <DependentUpon>CallInteractionLogger.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\TouchPadDialer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -126,6 +134,9 @@
     <Compile Include="TwilioTestClient.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\CallInteractionLogger.resx">
+      <DependentUpon>CallInteractionLogger.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\TouchPadDialer.resx">
       <DependentUpon>TouchPadDialer.cs</DependentUpon>

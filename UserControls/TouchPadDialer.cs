@@ -22,10 +22,13 @@ namespace TwilioEmulator
         #region IPhoneManager Implements
 
         string currentPhoneNum = "";
+
+        public IPhoneInteractionLogger phonelog = null;
         
 
         public PhoneStatus AttemptDial(string PhoneNumber)
         {
+            phonelog.LogInteraction(InteractionWho.server, InteractionWhat.Dial, SystemColors.Desktop, PhoneNumber);
             PhoneStatus retStatus = PhoneStatus.Ringing;
 
             currentPhoneNum = PhoneNumber;
@@ -61,8 +64,8 @@ namespace TwilioEmulator
                     break;
             }
 
-            
 
+            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Pickup, SystemColors.Desktop, retStatus.ToString());
              return retStatus;
         }
 
@@ -209,6 +212,7 @@ namespace TwilioEmulator
         {
             PhoneStatus = DefaultPhoneStatus;
             SystemController.Instance.Office.PhoneHungUp(currentPhoneNum);
+            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Hangup, SystemColors.Desktop,"");
 
         }
 
@@ -217,8 +221,42 @@ namespace TwilioEmulator
             btnStatus.Text = "Talking (Hang Up)";
             btnStatus.BackColor = Color.PowderBlue;
             PhoneStatus = PhoneStatus.Talking;
+            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Pickup, SystemColors.Desktop, "");
             SystemController.Instance.Office.PhonePickedUp(currentPhoneNum,DefaultPhoneStatus == PhoneStatus.ReadyMachine?true:false);
             
+        }
+
+        private void btn1_Click(object sender, EventArgs e)
+        {
+            var b = (Button)sender;
+            var tpress = b.Text.First();
+            if (lblBuffer.Text == "")
+            {
+                lblBuffer.Text = "Buffer: ";
+                lblBuffer.Visible = true;
+            }
+
+            lblBuffer.Text = lblBuffer.Text + tpress;
+            tmrDial.Enabled = false;
+            tmrDial.Enabled = true;
+            if (tpress == '#' || tpress == '*')
+            {
+                SubmitBuffer();
+            }
+           
+        }
+
+        private void SubmitBuffer()
+        {
+            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Say, SystemColors.Desktop, lblBuffer.Text);
+            tmrDial.Enabled = false;
+            lblBuffer.Text = "";
+            lblBuffer.Visible = false;
+        }
+
+        private void tmrDial_Tick(object sender, EventArgs e)
+        {
+            SubmitBuffer();
         }
 
 

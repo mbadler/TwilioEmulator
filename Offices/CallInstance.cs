@@ -71,6 +71,14 @@ namespace TwilioEmulator.Code
             FlowEngine.StartCallFlow();
         }
         //public DateTime LastAction { get; set; }
+
+        internal void AbortCallFlow()
+        {
+            if (FlowEngine.thread != null)
+            {
+                FlowEngine.thread.Abort();
+            }
+        }
     }
 
 public enum CallDirection 

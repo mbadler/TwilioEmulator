@@ -8,6 +8,7 @@ using TwilioEmulator.Phones;
 using Twilio;
 using System.Collections.Specialized;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace TwilioEmulator.Offices
 {
@@ -164,21 +165,29 @@ namespace TwilioEmulator.Offices
 
         public void MarkCallEnded(CallInstance ci,string reason,bool FromTheServer)
         {
-            var a = ci.CallForSet;
-            if (a.Status == TwilioCallStatuses.INPROGRESS)
-            {
-                a.EndTime = DateTime.Now;
-                a.Duration = (DateTime.Now - a.DateCreated).Seconds;
-            }
-            a.Status = TwilioCallStatuses.COMPLETED;
-           ci.CallStatus = CallStatus.Ended;
+            // run this in its own thread to ensure it runs
 
-           if (FromTheServer)
-           {
-               HangUpThePhoneConnectionFromTheserver(ci, reason);
-           }
-            SendCallEndStatus(ci, ci.GenerateCallBackValue(), reason);
-            
+            Task.Factory.StartNew(() =>
+                {
+                    var a = ci.CallForSet;
+                    if (a.Status == TwilioCallStatuses.INPROGRESS)
+                    {
+                        a.EndTime = DateTime.Now;
+                        a.Duration = (DateTime.Now - a.DateCreated).Seconds;
+                    }
+
+                    ci.AbortCallFlow();
+                    a.Status = TwilioCallStatuses.COMPLETED;
+                    ci.CallStatus = CallStatus.Ended;
+
+
+
+                    if (FromTheServer)
+                    {
+                        HangUpThePhoneConnectionFromTheserver(ci, reason);
+                    }
+                    SendCallEndStatus(ci, ci.GenerateCallBackValue(), reason);
+                });
         }
 
 
@@ -262,6 +271,7 @@ namespace TwilioEmulator.Offices
             catch (Exception ex)
             {
                 v.Caption = "<- Exception on Call Start Call Back to " + ci.CallBackurl+ex.Message ;
+                v.AddException(ex);
             }
             SystemController.Instance.Logger.LogObj(v);
             ci.CallStatus = CallStatus.Ended;

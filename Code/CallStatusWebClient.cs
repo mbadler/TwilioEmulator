@@ -16,6 +16,7 @@ namespace TwilioEmulator.Code
         {
             WebRequest request = base.GetWebRequest(address);
             HttpWebRequest webRequest = request as HttpWebRequest;
+            webRequest.KeepAlive = false;
             if (webRequest != null)
             {
                 webRequest.CookieContainer = Cookies;

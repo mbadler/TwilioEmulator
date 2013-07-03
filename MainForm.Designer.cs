@@ -45,7 +45,7 @@ namespace TwilioEmulator
             this.tbtnAutoPickup = new System.Windows.Forms.ToolStripButton();
             this.lblServerHeader = new System.Windows.Forms.Label();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.callInteractionLogger1 = new TwilioEmulator.UserControls.CallInteractionLogger();
             this.label1 = new System.Windows.Forms.Label();
             this.touchPadDialer1 = new TwilioEmulator.TouchPadDialer();
             this.label3 = new System.Windows.Forms.Label();
@@ -80,7 +80,7 @@ namespace TwilioEmulator
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Size = new System.Drawing.Size(727, 650);
-            this.splitContainer1.SplitterDistance = 324;
+            this.splitContainer1.SplitterDistance = 317;
             this.splitContainer1.TabIndex = 0;
             // 
             // trvLog
@@ -88,7 +88,7 @@ namespace TwilioEmulator
             this.trvLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.trvLog.Location = new System.Drawing.Point(0, 40);
             this.trvLog.Name = "trvLog";
-            this.trvLog.Size = new System.Drawing.Size(727, 284);
+            this.trvLog.Size = new System.Drawing.Size(727, 277);
             this.trvLog.TabIndex = 1;
             // 
             // panel1
@@ -185,6 +185,7 @@ namespace TwilioEmulator
             this.lblServerHeader.Size = new System.Drawing.Size(727, 14);
             this.lblServerHeader.TabIndex = 0;
             this.lblServerHeader.Text = "Emulator Server - Not active";
+            this.lblServerHeader.Click += new System.EventHandler(this.lblServerHeader_Click);
             // 
             // splitContainer2
             // 
@@ -194,44 +195,43 @@ namespace TwilioEmulator
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.richTextBox1);
+            this.splitContainer2.Panel1.Controls.Add(this.callInteractionLogger1);
             this.splitContainer2.Panel1.Controls.Add(this.label1);
             // 
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.touchPadDialer1);
             this.splitContainer2.Panel2.Controls.Add(this.label3);
-            this.splitContainer2.Size = new System.Drawing.Size(727, 308);
-            this.splitContainer2.SplitterDistance = 350;
+            this.splitContainer2.Size = new System.Drawing.Size(727, 315);
+            this.splitContainer2.SplitterDistance = 363;
             this.splitContainer2.TabIndex = 2;
             // 
-            // richTextBox1
+            // callInteractionLogger1
             // 
-            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(0, 13);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(350, 295);
-            this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
+            this.callInteractionLogger1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.callInteractionLogger1.Location = new System.Drawing.Point(0, 13);
+            this.callInteractionLogger1.Name = "callInteractionLogger1";
+            this.callInteractionLogger1.Size = new System.Drawing.Size(363, 302);
+            this.callInteractionLogger1.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(350, 13);
+            this.label1.Size = new System.Drawing.Size(363, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Call Log:";
             // 
             // touchPadDialer1
             // 
+            this.touchPadDialer1.DefaultPhoneStatus = TwilioEmulator.Phones.PhoneStatus.ReadyHuman;
             this.touchPadDialer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.touchPadDialer1.Location = new System.Drawing.Point(0, 13);
             this.touchPadDialer1.Margin = new System.Windows.Forms.Padding(0);
             this.touchPadDialer1.Name = "touchPadDialer1";
             this.touchPadDialer1.PhoneStatus = TwilioEmulator.Phones.PhoneStatus.ReadyHuman;
-            this.touchPadDialer1.Size = new System.Drawing.Size(373, 295);
+            this.touchPadDialer1.Size = new System.Drawing.Size(360, 302);
             this.touchPadDialer1.TabIndex = 2;
             // 
             // label3
@@ -239,7 +239,7 @@ namespace TwilioEmulator
             this.label3.Dock = System.Windows.Forms.DockStyle.Top;
             this.label3.Location = new System.Drawing.Point(0, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(373, 13);
+            this.label3.Size = new System.Drawing.Size(360, 13);
             this.label3.TabIndex = 1;
             this.label3.Text = "Phone:";
             // 
@@ -297,12 +297,12 @@ namespace TwilioEmulator
         private ToolStripLabel toolStripLabel2;
         private ToolStripComboBox ddAnswerMode;
         private SplitContainer splitContainer2;
-        private RichTextBox richTextBox1;
         private Label label1;
         private Label label3;
         private ImageList imageList1;
         private TouchPadDialer touchPadDialer1;
         private ToolStripButton tbtnMakePhoneNoises;
         private ToolStripButton tbtnAutoPickup;
+        private UserControls.CallInteractionLogger callInteractionLogger1;
     }
 }
