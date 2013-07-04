@@ -40,10 +40,10 @@ The following Twiml are planned for support :
 
 | Verb | Current Status | Remarks |
 | --- | ---| ---|
-|`Say`| Implemented |Read text to the caller _(via output to the log file or perhaps TTS)_
-|`Play`| |Play an audio file for the caller _(via a message on the log stating that the file would be palyed , maybe in the future we will actually download the file and play it over the speaker)_
+|`Say`| Implemented (loop ignored for now) |Read text to the caller _(via output to the log file or perhaps TTS)_
+|`Play`| Implemented (loop ignored for now) |Play an audio file for the caller _(via a message on the log stating that the file would be palyed , maybe in the future we will actually download the file and play it over the speaker)_
 | `Gather` | Partially (will execute nested nodes) | Collect digits the caller types on their keypad
-| `Sms` | | Send an SMS message during a phone call _(A message displayed in the log will indeicate it was sent)_
+| `Sms` | Implemented (Just outputs a message)| Send an SMS message during a phone call _(A message displayed in the log will indeicate it was sent)_
 | `Hangup` | Implemented | Hang up the call
 | `Redirect` | Implemented | Redirect call flow to a different TwiML document.
 | `Pause` | Implemented | Wait before executing more instructions

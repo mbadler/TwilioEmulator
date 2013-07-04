@@ -207,6 +207,39 @@ namespace TwilioEmulator.Code
             VerbFunctions.Add(Redirect);
             VerbFunctions.Add(Gather);
             VerbFunctions.Add(Say);
+            VerbFunctions.Add(Play);
+            VerbFunctions.Add(SMS);
+        }
+
+        protected TwimlVerbResult SMS(XElement twimnode)
+        {
+            return SendToPhone(twimnode);
+
+        }
+
+        protected TwimlVerbResult Play(XElement twimnode)
+        {
+            return SendToPhone(twimnode);
+
+        }
+
+        private TwimlVerbResult SendToPhone(XElement twimnode)
+        {
+            var words = twimnode.Value;
+            var verb = twimnode.Name;
+            var a = new LogObj()
+            {
+                Caption = "Twiml "+verb+": " + words,
+                LogSymbol = LogSymbol.TwilioToPhone,
+                CallInstance = MyCall
+            }.LogIt();
+
+
+
+            SystemController.Instance.Office.SayToPhone(MyCall, verb+"ing (" + words + ")");
+
+
+            return TwimlVerbResult.Continue;
         }
 
         protected TwimlVerbResult Say(XElement twimnode)
