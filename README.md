@@ -50,6 +50,17 @@ The following Twiml are planned for support :
 | `Reject` | | Decline an incoming call without being billed.
 
 
+API Call Support
+-------------------------------
+
+
+
+The following API Calls are currently supported:
+| .Net Call | Rest | Status |
+| --- | --- | --- |
+| `InitiateOutboundCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls | Implemented |
+
+
 #### Concurrent Phone Calls: ####
 
 
