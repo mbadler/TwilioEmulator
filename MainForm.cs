@@ -83,6 +83,8 @@ namespace TwilioEmulator
                      tn.Nodes.Add(new TreeNode(x.Key + " : " + this.GetObjectText(x.Value)));
                  }
                  );
+
+                tn.EnsureVisible();
             }));
         }
 

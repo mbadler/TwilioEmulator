@@ -24,6 +24,11 @@ namespace TwilioEmulator.Code
 
         public List<TwimlVerbFunction> VerbFunctions = new List<TwimlVerbFunction>();
 
+        #region Verb Loop Processing
+
+
+       
+
         public IEnumerable<XElement> TwimlVerbs()
         {
             while (MyCall.CallStatus != CallStatus.Ended)
@@ -41,34 +46,32 @@ namespace TwilioEmulator.Code
                 }
                 else
                 {
+                    // we need to process siblings
                     if (CurrentNode.NextElement() == null)
                     {
-
-                        var parnode = CurrentNode.Parent;
-                        // it either a gather or the end of the docuemtn
-                        // if its teh end of the document then exit
-                        if (parnode.Name.ToString().ToUpper() == "RESPONSE")
-                        {
-                            // exit the loop
-                            yield break;
-                        }
-                        else
-                        {
-                            // its the gather verb
-                            // we have played all of the children verbs so now set the gather so that we cna begin the final timeout
-                            CurrentNode = GatherNode;
-                            // the gather might be the last in the dcouemnt
-                            
-                        }
+                        // no siblings
+                        // set it to the parent node
+                        // if we currenttl are the gather node then zero it out first
+                        
+                        CurrentNode = CurrentNode.Parent;
                     }
                     else
                     {
-                        // ok - so seems that there is a sister node
+                        //set it to tthe next sibling
+                        if (GatherNode == CurrentNode)
+                        {
+                            GatherNode = null;
+                        }
                         CurrentNode = CurrentNode.NextElement();
-                    };
+                        // Set the parent node as the active one
+                    }
 
                 };
-
+                if (CurrentNode.Name.ToString().ToUpper() == "RESPONSE")
+                {
+                    // we are done
+                    yield break;
+                }
                 // if its the gather verb then set that as the gethernode and lift the current emenet to the gather child
                 // unless we are the gather verb then just continue
                 if (GatherNode == null && CurrentNode.Name.ToString().ToUpper() == "GATHER")
@@ -91,13 +94,6 @@ namespace TwilioEmulator.Code
 
         }
 
-        void StartGather(XElement GatherNode)
-        {
-
-            this.GatherNode = GatherNode;
-     
-        }
-
         internal void StartCallFlow()
         {
             // start as a new thread
@@ -105,32 +101,30 @@ namespace TwilioEmulator.Code
 
             MyCall.CallStatus = CallStatus.ProcessingCall;
             Task.Factory.StartNew(() =>
+            {
+                thread = Thread.CurrentThread;
+                TwimlPath = MyCall.CallOptions.Url;
+                TwimlLogAs = "Initial Call";
+                // get the introductory twiml
+                // start procesing
+                TwimlVerbResult tvr = TwimlVerbResult.Redirect;
+                while (MyCall.CallStatus != CallStatus.Ended && tvr == TwimlVerbResult.Redirect)
                 {
-                    thread = Thread.CurrentThread;
-                    TwimlPath = MyCall.CallOptions.Url;
-                    TwimlLogAs = "Initial Call";
-                    // get the introductory twiml
-                    // start procesing
-                    TwimlVerbResult tvr = TwimlVerbResult.Redirect;
-                    while (MyCall.CallStatus != CallStatus.Ended  && tvr == TwimlVerbResult.Redirect)
-                    {
-                        DoTwimlRequest(TwimlPath ,TwimlLogAs);
-                        MyCall.Digits = "";
-                        GatherNode = null;
-                        CurrentNode = null;
-                        TwimlPath = "";
-
-                        tvr = ProcessReceivedTwiml();
-                    }
-
-                    SystemController.Instance.Office.MarkCallEnded(MyCall,"Twiml Execution ended",true);
+                    DoTwimlRequest(TwimlPath, TwimlLogAs);
+                    MyCall.Digits = "";
+                    GatherNode = null;
+                    CurrentNode = null;
                     
 
+                    tvr = ProcessReceivedTwiml();
                 }
+
+                SystemController.Instance.Office.MarkCallEnded(MyCall, "Twiml Execution ended", true);
+
+
+            }
                  , TaskCreationOptions.LongRunning);
         }
-
-       
 
         private TwimlVerbResult ProcessReceivedTwiml()
         {
@@ -138,21 +132,68 @@ namespace TwilioEmulator.Code
             foreach (var node in TwimlVerbs())
             {
                 // Mark what the current url should be - if that changes then pop out and let the rerequset happen
-                
-                // find the right delegate and execute it
-                
-                 TwimlVerbResult tvr =   VerbFunctions.Where(x => x.Method.Name.ToUpper() == node.Name.ToString().ToUpper()).First()(node);
-                 if (tvr != TwimlVerbResult.Continue)
-                 {
-                     return tvr;
-                 }
 
-                
+                // find the right delegate and execute it
+
+                var tvr =  RunTwimlVerb(node);
+                if (tvr != TwimlVerbResult.Continue)
+                {
+                    return tvr;
+                }
+
             }
             return TwimlVerbResult.Continue;
 
         }
+
+        private TwimlVerbResult RunTwimlVerb(XElement node)
+        {
+            var verbfunc = VerbFunctions.Where(x => x.Method.Name.ToUpper() == node.Name.ToString().ToUpper()).First();
+            TwimlVerbResult tvr = TwimlVerbResult.Continue;
+            Thread ExecutingThread = null;
+            var status = Task.Factory.StartNew(() =>
+            {
+                ExecutingThread = Thread.CurrentThread;
+                tvr = verbfunc(node);
+
+            });
+            while (!status.IsCompleted)
+            {
+                Thread.Sleep(100);
+                if (GatherNode != null && GatherNode != CurrentNode) 
+                {
+                    
+                    if (MyCall.Digits != "")
+                    {
+                        ExecutingThread.Abort();
+                        CurrentNode = GatherNode;
+                        return RunTwimlVerb(GatherNode);
+                    }
+                }
+            }
+
+            
+            return tvr;
+           
+        }
+
+        #endregion
         
+
+
+#region Gather Specific Processing
+        void StartGather(XElement GatherNode)
+        {
+
+            this.GatherNode = GatherNode;
+            MyCall.Digits = "";
+     
+        }
+
+        
+#endregion
+
+
 
 
         private void DoTwimlRequest( string UrlToUse, string LogAs)
@@ -197,6 +238,7 @@ namespace TwilioEmulator.Code
 
 
         }
+
 
         #region Twiml Verb Functions
 
@@ -266,19 +308,12 @@ namespace TwilioEmulator.Code
         protected TwimlVerbResult Pause(XElement twimnode)
         {
             var len = int.Parse(twimnode.Attribute("length").Value);
-            for (int i = 0; i <= len*2; i++)
-            {
-                // we need to keep it responsive in case the call is shut down
-                if (MyCall.CallStatus == CallStatus.Ended)
-                {
-                    return TwimlVerbResult.EndCall;
-                }
-                Thread.Sleep(500);
-
-            }
+            Thread.Sleep(len * 1000);
             return TwimlVerbResult.Continue;
             
         }
+
+
 
         protected TwimlVerbResult Hangup(XElement twimnode)
         {
@@ -297,7 +332,34 @@ namespace TwilioEmulator.Code
 
         protected TwimlVerbResult Gather(XElement twimnode)
         {
-            return TwimlVerbResult.Continue;
+            var timeout = twimnode.Attributes("timeout").Any() ?
+                int.Parse(twimnode.Attribute("timeout").Value) * 2 : 10;
+
+            var finishOnKey = twimnode.Attributes("finishOnKey").Any() ?
+                twimnode.Attribute("finishOnKey").Value : "#";
+
+            var numDigits = twimnode.Attributes("numDigits").Any() ?
+                int.Parse(twimnode.Attribute("numDigits").Value)  : int.MaxValue;
+
+            var action = twimnode.Attributes("action").Any() ?
+                twimnode.Attribute("action").Value : TwimlPath;
+
+            TwimlLogAs = "Gather Submit Action";
+
+            
+            for (int i = 0; i < timeout; i++)
+            {
+                var dig = MyCall.Digits;
+                if (dig.Contains(finishOnKey) || dig.Length >= numDigits)
+                {
+                    break;
+                }
+
+               
+                Thread.Sleep(500);
+            }
+
+            return MyCall.Digits==""?TwimlVerbResult.Continue: TwimlVerbResult.Redirect;
         }
 
         #endregion

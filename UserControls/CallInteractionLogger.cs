@@ -34,8 +34,8 @@ namespace TwilioEmulator.UserControls
                     return;
                 }
             }
-            LogInteractionToLog(fromwho, what, WordBuffer);
-            WordBuffer = "";}));
+            LogInteractionToLog(fromwho, what, interaction);
+           }));
         }
 
         private void LogInteractionToLog(InteractionWho fromwho, InteractionWhat what, string interaction)
@@ -53,7 +53,7 @@ namespace TwilioEmulator.UserControls
                     richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
                 }
 
-                richTextBox1.AppendText("\n" + DateTime.Now.ToString() + " " + fromwho.ToString() + " " + what.ToString() + " " + interaction);
+                richTextBox1.AppendText("\n" + DateTime.Now.ToString() + " " + fromwho.ToString() + " " + what.ToString() + " :: " + interaction);
             
          
         }
@@ -63,6 +63,12 @@ namespace TwilioEmulator.UserControls
             LogInteractionToLog(InteractionWho.server, InteractionWhat.Say, WordBuffer);
             tmrBuffer.Enabled = false;
             WordBuffer = "";
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            richTextBox1.SelectionStart = richTextBox1.Text.Length; //Set the current caret position at the end
+            richTextBox1.ScrollToCaret(); //Now scroll it automatically
         }
     }
 }

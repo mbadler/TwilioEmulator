@@ -191,6 +191,12 @@ namespace TwilioEmulator.Offices
         }
 
 
+        public void PhoneSendingDigits(string phonenumber, string digits)
+        {
+            var ci = GetCallInstanceFromPhoneNumber(phonenumber);
+            ci.Digits = ci.Digits + digits;
+        }
+
         public void PhonePickedUp(string phonenumber, bool IsMachine)
         {
             // find the ci with that phone number

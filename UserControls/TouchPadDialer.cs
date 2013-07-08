@@ -254,9 +254,11 @@ namespace TwilioEmulator
 
         private void SubmitBuffer()
         {
-            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Say, SystemColors.Desktop, lblBuffer.Text);
+            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Say, SystemColors.Desktop, lblBuffer.Text.Replace("Buffer: ",""));
             tmrDial.Enabled = false;
-            lblBuffer.Text = "";
+           
+            SystemController.Instance.Office.PhoneSendingDigits(currentPhoneNum, lblBuffer.Text.Replace("Buffer: ", ""));
+         lblBuffer.Text = "";
             lblBuffer.Visible = false;
         }
 
