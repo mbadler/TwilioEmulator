@@ -53,12 +53,14 @@ The following Twiml are planned for support :
 API Call Support
 -------------------------------
 
-
-
 The following API Calls are currently supported:
+
 | .Net Call | Rest | Status |
 | --- | --- | --- |
 | `InitiateOutboundCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls | Implemented |
+| `GetCall` | GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid} | Implemeted |
+| `HangupCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}  "Status" | Impleneted (only Status=completed) |
+| `RedirectCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid} "URL" | Implemented |
 
 
 #### Concurrent Phone Calls: ####
