@@ -233,6 +233,7 @@ namespace TwilioEmulator.Offices
 
 
             a.CallStatus = CallStatus.ReadyForProcessing;
+            a.CallForSet.Status = TwilioCallStatuses.INPROGRESS;
             //ProcessDoTwimlRequest(a, a.CallOptions.Url, "Get Welcome message Twiml");
 
         }
