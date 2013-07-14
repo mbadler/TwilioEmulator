@@ -339,14 +339,14 @@ namespace TwilioEmulator.Code
                 twimnode.Attribute("finishOnKey").Value : "#";
 
             var numDigits = twimnode.Attributes("numDigits").Any() ?
-                int.Parse(twimnode.Attribute("numDigits").Value)  : int.MaxValue;
+                int.Parse(twimnode.Attribute("numDigits").Value) : int.MaxValue;
 
             var action = twimnode.Attributes("action").Any() ?
                 twimnode.Attribute("action").Value : TwimlPath;
 
             TwimlLogAs = "Gather Submit Action";
 
-            
+
             for (int i = 0; i < timeout; i++)
             {
                 var dig = MyCall.Digits;
@@ -355,11 +355,21 @@ namespace TwilioEmulator.Code
                     break;
                 }
 
-               
+
                 Thread.Sleep(500);
             }
 
-            return MyCall.Digits==""?TwimlVerbResult.Continue: TwimlVerbResult.Redirect;
+
+            if (MyCall.Digits.EndsWith(finishOnKey)) 
+            {
+                MyCall.Digits = MyCall.Digits.Substring(0,MyCall.Digits.Count()-1);
+            }
+
+            if (MyCall.Digits != "")
+            {
+                TwimlPath = action;
+            }
+            return MyCall.Digits == "" ? TwimlVerbResult.Continue : TwimlVerbResult.Redirect;
         }
 
         #endregion
