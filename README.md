@@ -8,30 +8,41 @@ The goal is to emulate most of Twilio's functions - including Call control API a
 
 ![Main Screen](https://raw.github.com/mbadler/TwilioEmulator/master/ScreenShots/MainScreen.png)
 
-Current Status
+Current Status:
 --------------
 
-  The Emulator is currently focused on outbound initiated phone calls.
-  Inbound Phone calls will be added later.
+  - Functionality is currently fully implemeted for Outbound calls.
+  - Starting to work on inbound calls
+  - Planning for Phone number purchasing API
 
-  - The emulator listens fro REST Connections on port 28080
-  - POSTS to calls.json (twilio.InitiateOutboundCall() with the c# helper):
-    - Request are accepted
-    - A response indicating that the call has been queued is returned
-    - The call is added to the call queue
-    - If the overall call status is set to busy,No-answer etc... then a callback is sent to the status url with that staus
-    - The phone key pad starts to blink indicateing that the phone is ringing
-    - Click the pickup phone button - the phone call connects
-    - There is a Auto Pickup" button to autmaticlly pick up calls
-    - If ifMachine="Hangup" is specified in the request then if the autoresponser state is set to machine then the phone is hung up automaticlly
-    - A connect request Twiml is sent
-    - Requests are sent to the url - Only the Pause Verb currenly works
-  - GET to call/sid.json will return the call status
-  - Post to call/sid.json will termintate the call
-  - All requests and responses are logged
+Down the road:
+---------------
+- SMS
+- Call list API
+- Multiple Phones
+- Script phone clients (that respond with scripted digits)
+- Headless mode configurable via API call for unit testing external Twilio based applications
+- Playing voice files 
+- Using Windows TTS to play the actual `SAY` sentences so that you can approximate what the call will sound like 
 
 
-Twiml Verbs Support
+How it works:
+-------------
+
+TwilioEmulator is a windows application that implements a http webserver (WebAPI) to emulate the Twilio Voice Services.
+When a web application sends a connect call to the API the emulated phone keypad allows the tester to interact with the emulator.
+The emulator requests Twiml Documents from the server and exeutes them to the emulated phone. it listens to responses from the touch tone pad and relays those back to the server.
+The server can control the call the executing by calling the redirect or hangup apis.
+The server receives a call back when the phone call ends or the phone call could not connect
+The phone can be set to Machine mode and the `IfMachine` parameter is honored
+
+Incoming phone calls:
+----------------------
+Incoming phone calls are being worked on now. Currently any call from the touchpad will go to the default Incoming Phone Number and the default Voice URL.
+You specify the defualt number and url in the configuration file or by calling the `UpdateIncomingPhoneNumber` API call
+
+
+Twiml Verbs Support:
 -------------------------------
 
 The following Twiml are planned for support :
@@ -53,7 +64,7 @@ The following Twiml are planned for support :
 API Call Support
 -------------------------------
 
-The following API Calls are currently supported:
+The following API Calls are currently supported or are planned:
 
 | .Net Call | Rest | Status |
 | --- | --- | --- |
@@ -61,6 +72,7 @@ The following API Calls are currently supported:
 | `GetCall` | GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid} | Implemeted |
 | `HangupCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}  "Status" | Impleneted (only Status=completed) |
 | `RedirectCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid} "URL" | Implemented |
+| `UpdateIncomingPhoneNumber` | POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{PhoneSid} | Planning |
 
 
 #### Concurrent Phone Calls: ####
