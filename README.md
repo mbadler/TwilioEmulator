@@ -13,7 +13,7 @@ Current Status:
 
   - Functionality is currently fully implemeted for Outbound calls.
   - Starting to work on inbound calls
-  - Planning for Phone number purchasing API
+  - Planning for Full Phone number purchasing API
 
 Down the road:
 ---------------
@@ -39,7 +39,7 @@ The phone can be set to Machine mode and the `IfMachine` parameter is honored
 Incoming phone calls:
 ----------------------
 Incoming phone calls are being worked on now. Currently any call from the touchpad will go to the default Incoming Phone Number and the default Voice URL.
-You specify the defualt number and url in the configuration file or by calling the `UpdateIncomingPhoneNumber` API call
+You specify the defualt number and url in the configuration file or by calling the `AddIncomingPhoneNumber` API call
 
 
 Twiml Verbs Support:
@@ -72,7 +72,7 @@ The following API Calls are currently supported or are planned:
 | `GetCall` | GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid} | Implemeted |
 | `HangupCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}  "Status" | Impleneted (only Status=completed) |
 | `RedirectCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid} "URL" | Implemented |
-| `UpdateIncomingPhoneNumber` | POST /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{PhoneSid} | Planning |
+| `AddIncomingPhoneNumber` | POST 2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers | Planning |
 
 
 #### Concurrent Phone Calls: ####
