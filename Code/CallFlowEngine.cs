@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using TwilioEmulator.Code.Extensions;
 using System.Threading.Tasks;
 using System.Threading;
+using TwilioEmulator.Code.Models;
 
 namespace TwilioEmulator.Code
 {
@@ -255,7 +256,29 @@ namespace TwilioEmulator.Code
 
         protected TwimlVerbResult SMS(XElement twimnode)
         {
-            return SendToPhone(twimnode);
+            string action = twimnode.Attributes("action").Any() ?
+                twimnode.Attribute("timeout").Value : "";
+
+
+            SMSOptions s = new SMSOptions()
+            {
+                to = twimnode.Attribute("to").Value,
+                from = twimnode.Attribute("from").Value,
+                body = twimnode.Attribute("body").Value,
+                statusCallback = twimnode.Attribute("statusCallback").Value
+            };
+            SystemController.Instance.Office.NewSMSRequest(s);
+
+            if (action != "")
+            {
+                TwimlPath = action;
+                TwimlLogAs = "SMS Action URL ";
+                return TwimlVerbResult.Redirect;
+            }
+            else
+            {
+                return TwimlVerbResult.Continue;
+            }
 
         }
 

@@ -81,7 +81,10 @@ namespace TwilioEmulator
              phonelog.LogInteraction(InteractionWho.server, InteractionWhat.Say, SystemColors.Desktop, Text);
          }
 
-        
+         void IPhoneManager.SMSReceived(string FromPhoneNumber, string ToPhoneNumber, string Text)
+         {
+             phonelog.LogInteraction(InteractionWho.server, InteractionWhat.SMS, Color.Green, "SMS - From:" + FromPhoneNumber + "  " + Text);
+         }
          
         #endregion 
 
@@ -146,7 +149,7 @@ namespace TwilioEmulator
         {
             if (PhoneStatus == PhoneStatus.Talking || PhoneStatus == PhoneStatus.Ringing)
             {
-                MessageBox.Show("There currenly is a phone call in progress - please end it before changeing statuses");
+                MessageBox.Show("There currently is a phone call in progress - please end it before changeing statuses");
                 return;
             }
             
@@ -211,6 +214,10 @@ namespace TwilioEmulator
                         break;
 
                     }
+                case PhoneStatus.ReadyHuman:
+                    {
+                        break;
+                    }
             }
         }
 
@@ -269,6 +276,18 @@ namespace TwilioEmulator
 
 
 
-        
+       
+
+        string IPhone.PhoneNumber
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

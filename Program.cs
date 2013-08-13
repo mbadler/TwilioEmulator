@@ -22,7 +22,7 @@ namespace TwilioEmulator
             SystemController.Instance.theForm = f;
             SystemController.Instance.Logger = f;
             SystemController.Instance.StartUp();
-            
+            f.ControlerCreated();
 
             Application.Run(f);
         }

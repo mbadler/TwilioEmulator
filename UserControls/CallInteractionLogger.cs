@@ -50,7 +50,16 @@ namespace TwilioEmulator.UserControls
                 }
                 else
                 {
-                    richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
+                    if (what == InteractionWhat.SMS)
+                    {
+                        richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Bold);
+                        
+                        richTextBox1.SelectionColor = Color.Black;
+                    }
+                    else
+                    {
+                        richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
+                    }
                 }
 
                 richTextBox1.AppendText("\n" + DateTime.Now.ToString() + " " + fromwho.ToString() + " " + what.ToString() + " :: " + interaction);

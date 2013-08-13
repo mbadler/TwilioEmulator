@@ -34,7 +34,11 @@ namespace TwilioEmulator
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.trvLog = new System.Windows.Forms.TreeView();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.trvHttp = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
@@ -43,6 +47,8 @@ namespace TwilioEmulator
             this.ddAnswerMode = new System.Windows.Forms.ToolStripComboBox();
             this.tbtnMakePhoneNoises = new System.Windows.Forms.ToolStripButton();
             this.tbtnAutoPickup = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
             this.lblServerHeader = new System.Windows.Forms.Label();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.callInteractionLogger1 = new TwilioEmulator.UserControls.CallInteractionLogger();
@@ -55,6 +61,9 @@ namespace TwilioEmulator
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -72,24 +81,67 @@ namespace TwilioEmulator
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.trvLog);
+            this.splitContainer1.Panel1.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
-            this.splitContainer1.Size = new System.Drawing.Size(727, 650);
+            this.splitContainer1.Size = new System.Drawing.Size(886, 650);
             this.splitContainer1.SplitterDistance = 317;
             this.splitContainer1.TabIndex = 0;
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 40);
+            this.tabControl1.Multiline = true;
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(886, 277);
+            this.tabControl1.TabIndex = 2;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.trvLog);
+            this.tabPage1.Location = new System.Drawing.Point(4, 23);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(878, 250);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "API Interactions";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
             // trvLog
             // 
+            this.trvLog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.trvLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trvLog.Location = new System.Drawing.Point(0, 40);
+            this.trvLog.Location = new System.Drawing.Point(3, 3);
             this.trvLog.Name = "trvLog";
-            this.trvLog.Size = new System.Drawing.Size(727, 277);
+            this.trvLog.Size = new System.Drawing.Size(872, 244);
             this.trvLog.TabIndex = 1;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.trvHttp);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(878, 251);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "HTTP Log";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // trvHttp
+            // 
+            this.trvHttp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trvHttp.Location = new System.Drawing.Point(3, 3);
+            this.trvHttp.Name = "trvHttp";
+            this.trvHttp.Size = new System.Drawing.Size(872, 245);
+            this.trvHttp.TabIndex = 0;
             // 
             // panel1
             // 
@@ -98,7 +150,7 @@ namespace TwilioEmulator
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(727, 40);
+            this.panel1.Size = new System.Drawing.Size(886, 40);
             this.panel1.TabIndex = 0;
             // 
             // toolStrip1
@@ -109,10 +161,12 @@ namespace TwilioEmulator
             this.toolStripLabel2,
             this.ddAnswerMode,
             this.tbtnMakePhoneNoises,
-            this.tbtnAutoPickup});
+            this.tbtnAutoPickup,
+            this.toolStripLabel3,
+            this.toolStripLabel4});
             this.toolStrip1.Location = new System.Drawing.Point(0, 14);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(727, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(886, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
@@ -176,13 +230,25 @@ namespace TwilioEmulator
             this.tbtnAutoPickup.Text = "Auto Pick up";
             this.tbtnAutoPickup.Click += new System.EventHandler(this.tbtnAutoPickup_Click);
             // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(47, 22);
+            this.toolStripLabel3.Text = "Dial To:";
+            // 
+            // toolStripLabel4
+            // 
+            this.toolStripLabel4.Name = "toolStripLabel4";
+            this.toolStripLabel4.Size = new System.Drawing.Size(78, 22);
+            this.toolStripLabel4.Text = "Not Specified";
+            // 
             // lblServerHeader
             // 
             this.lblServerHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblServerHeader.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblServerHeader.Location = new System.Drawing.Point(0, 0);
             this.lblServerHeader.Name = "lblServerHeader";
-            this.lblServerHeader.Size = new System.Drawing.Size(727, 14);
+            this.lblServerHeader.Size = new System.Drawing.Size(886, 14);
             this.lblServerHeader.TabIndex = 0;
             this.lblServerHeader.Text = "Emulator Server - Not active";
             this.lblServerHeader.Click += new System.EventHandler(this.lblServerHeader_Click);
@@ -202,8 +268,8 @@ namespace TwilioEmulator
             // 
             this.splitContainer2.Panel2.Controls.Add(this.touchPadDialer1);
             this.splitContainer2.Panel2.Controls.Add(this.label3);
-            this.splitContainer2.Size = new System.Drawing.Size(727, 315);
-            this.splitContainer2.SplitterDistance = 363;
+            this.splitContainer2.Size = new System.Drawing.Size(886, 315);
+            this.splitContainer2.SplitterDistance = 442;
             this.splitContainer2.TabIndex = 2;
             // 
             // callInteractionLogger1
@@ -211,7 +277,7 @@ namespace TwilioEmulator
             this.callInteractionLogger1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.callInteractionLogger1.Location = new System.Drawing.Point(0, 13);
             this.callInteractionLogger1.Name = "callInteractionLogger1";
-            this.callInteractionLogger1.Size = new System.Drawing.Size(363, 302);
+            this.callInteractionLogger1.Size = new System.Drawing.Size(442, 302);
             this.callInteractionLogger1.TabIndex = 1;
             // 
             // label1
@@ -219,7 +285,7 @@ namespace TwilioEmulator
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(363, 13);
+            this.label1.Size = new System.Drawing.Size(442, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Call Log:";
             // 
@@ -231,7 +297,7 @@ namespace TwilioEmulator
             this.touchPadDialer1.Margin = new System.Windows.Forms.Padding(0);
             this.touchPadDialer1.Name = "touchPadDialer1";
             this.touchPadDialer1.PhoneStatus = TwilioEmulator.Phones.PhoneStatus.ReadyHuman;
-            this.touchPadDialer1.Size = new System.Drawing.Size(360, 302);
+            this.touchPadDialer1.Size = new System.Drawing.Size(440, 302);
             this.touchPadDialer1.TabIndex = 2;
             // 
             // label3
@@ -239,7 +305,7 @@ namespace TwilioEmulator
             this.label3.Dock = System.Windows.Forms.DockStyle.Top;
             this.label3.Location = new System.Drawing.Point(0, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(360, 13);
+            this.label3.Size = new System.Drawing.Size(440, 13);
             this.label3.TabIndex = 1;
             this.label3.Text = "Phone:";
             // 
@@ -249,7 +315,7 @@ namespace TwilioEmulator
             this.label2.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(0, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(727, 14);
+            this.label2.Size = new System.Drawing.Size(886, 14);
             this.label2.TabIndex = 1;
             this.label2.Text = "Phone";
             // 
@@ -261,7 +327,7 @@ namespace TwilioEmulator
             // 
             // MainForm
             // 
-            this.ClientSize = new System.Drawing.Size(727, 650);
+            this.ClientSize = new System.Drawing.Size(886, 650);
             this.Controls.Add(this.splitContainer1);
             this.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "MainForm";
@@ -271,6 +337,9 @@ namespace TwilioEmulator
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -304,5 +373,11 @@ namespace TwilioEmulator
         private ToolStripButton tbtnMakePhoneNoises;
         private ToolStripButton tbtnAutoPickup;
         private UserControls.CallInteractionLogger callInteractionLogger1;
+        private ToolStripLabel toolStripLabel3;
+        private ToolStripLabel toolStripLabel4;
+        private TabControl tabControl1;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
+        private TreeView trvHttp;
     }
 }

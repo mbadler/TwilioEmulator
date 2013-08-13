@@ -8,6 +8,7 @@ namespace TwilioEmulator.Phones
     public interface IPhone
     {
         PhoneStatus PhoneStatus { get; set; }
+        string PhoneNumber { get; set; }
     }
 
     public enum PhoneStatus

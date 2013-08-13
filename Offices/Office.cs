@@ -9,6 +9,7 @@ using Twilio;
 using System.Collections.Specialized;
 using System.Net;
 using System.Threading.Tasks;
+using TwilioEmulator.Code.Models;
 
 namespace TwilioEmulator.Offices
 {
@@ -20,14 +21,17 @@ namespace TwilioEmulator.Offices
         public List<CallInstance> CallList = new List<CallInstance>();
 
 
+        public IncomingPhoneNumber DefaultNumber = new IncomingPhoneNumber();
+
         #region API Requests
+
         public CallInstance NewCallRequest(CallOptions co)
         {
             CallInstance c = new CallInstance()
             {
                 CallForCreate = new Call()
                 {
-                    Sid = Guid.NewGuid().ToString().Replace("-", ""),
+                    Sid = CreateSid(),
                     Status = TwilioCallStatuses.QUEUED,
                     Direction = "outbound-api",
                     DateCreated = DateTime.Now.ToUniversalTime(),
@@ -45,11 +49,18 @@ namespace TwilioEmulator.Offices
             return c;
         }
 
+private static string CreateSid()
+{
+return Guid.NewGuid().ToString().Replace("-", "");
+}
+
         private void HangupCallRequest(CallInstance d, string stat)
         {
             HangUpThePhoneConnectionFromTheserver(d, stat);
         }
         #endregion
+
+
 
         protected override void Process()
         {
@@ -238,7 +249,11 @@ namespace TwilioEmulator.Offices
 
         }
 
-       
+
+        public void PhoneDialingIn(string FromPhoneNumber, string toPhoneNumber)
+        {
+
+        }
 
         private void HangUpThePhoneConnectionFromTheserver(CallInstance ci,string Reason)
         {
@@ -304,8 +319,49 @@ namespace TwilioEmulator.Offices
             return a;
         }
 #endregion
+        #region Events
+        public event EventHandler<StringEventArgs> IncomingPhoneNumberChanged;
 
-       
+
+        #endregion
+        #region SMS
+        public SMSMessage NewSMSRequest(SMSOptions options)
+        {
+            var v = new LogObj()
+            {
+                LogSymbol = LogSymbol.TwilioToPhone,
+                Caption = "Sms Message"
+            }.AddNode("Sms Message", options.body).LogIt();
+
+            SystemController.Instance.PhoneManager.SMSReceived(options.from, options.to, options.body);
+
+            CallStatusWebClient cswb = new CallStatusWebClient();
+
+            if (options.statusCallback != null)
+            {
+
+
+                cswb.DoRequest(options.statusCallback,
+                    new NameValueCollection()
+                    {
+                        {"SmsStatus","sent"},
+                        {"SmsSid",CreateSid()}
+                    });
+            }
+            return new SMSMessage()
+            {
+                DateCreated = DateTime.Now,
+                DateSent = DateTime.Now,
+                Direction = "outbound-api",
+                From = options.from,
+                To = options.to,
+                Status = "sent",
+                Sid = Guid.NewGuid().ToString().Replace("-", "")
+            };
+        }
+        #endregion
+
+
     }
 
    

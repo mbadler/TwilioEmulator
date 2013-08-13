@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using TwilioEmulator.Offices;
 using TwilioEmulator.Phones;
+using System.Web.Http.Routing;
+using TwilioEmulator.Code.MessageHandler;
 
 
 namespace TwilioEmulator.Code
@@ -55,6 +57,7 @@ namespace TwilioEmulator.Code
 
         private static int _waitInterval = 1000;
 
+        public string DefaultPhoneNumber { get; set; }
         public static int WaitInterval
         {
             get { return _waitInterval; }
@@ -74,10 +77,24 @@ namespace TwilioEmulator.Code
                 action = "Modify"
             };
 
+            object emptydefaults = (object)new
+            {
+                 
+            };
+
             string routeTemplate1 = "2010-04-01/Accounts/{sid}/{controller}.json";
             string routeTemplate2 = "2010-04-01/Accounts/{sid}/{controller}";
 
 
+            // special for sms
+            string SMSTemplate = "2010-04-01/Accounts/{sid}/{controller}/Messages";
+            string SMSTemplate2 = "2010-04-01/Accounts/{sid}/{controller}/Messages.json";
+
+            //var TwoSegContraint = new HttpRouteValueDictionary { { "seg2", "[A-Za-z]{1,*}" } };//  new Dictionary<string, IHttpRouteConstraint>();
+
+
+            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "SMS1", SMSTemplate);
+            HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "SMS2", SMSTemplate2);
             HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "ModifyDefault", ModifyTemplate1, modifydefaults);
             HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "ModifyDirect", ModifyTemplate2, modifydefaults);
             HttpRouteCollectionExtensions.MapHttpRoute(configuration.Routes, "Default", routeTemplate1);
@@ -92,7 +109,14 @@ namespace TwilioEmulator.Code
             jSettings.Converters.Add(new TwilioDateTimeConvertor());
             jsonFormatter.SerializerSettings = jSettings;
             
-            
+            // Logging messaanger
+
+            var messageLogger = new HttpLoggingMessageHandler();
+            messageLogger.OnHttpLog += new EventHandler<HttpLoggingEventArgs>(messageLogger_OnHttpLog);
+            configuration.MessageHandlers.Add(messageLogger);
+
+
+
             HttpSelfHostServer httpSelfHostServer = new HttpSelfHostServer(configuration);
             try
             {
@@ -108,11 +132,16 @@ namespace TwilioEmulator.Code
             this.ActivePort = int.Parse(port);
         }
 
+        
+
         public void StartUp()
         {
             this.StartWebServer();
             Office.Startup();
-             
+            this.DefaultPhoneNumber = Settings.Default.DefaultFromNumber;
+            Office.DefaultNumber.PhoneNumber = Settings.Default.DefaultIncomingPhoneNumber;
+            Office.DefaultNumber.VoiceUrl = Settings.Default.DefaultVoiceURL; 
+            
         }
 
         public void Dispose()
@@ -120,9 +149,19 @@ namespace TwilioEmulator.Code
             SystemController.server.Dispose();
         }
 
-       
+        #region Event Handlers
+        void messageLogger_OnHttpLog(object sender, HttpLoggingEventArgs e)
+        {
+            // keep the ball rolling
+            if (OnHttpLog != null)
+            {
+                OnHttpLog(sender, e);
+            }
 
-        
+        }
+        #endregion
+        public event EventHandler<HttpLoggingEventArgs> OnHttpLog;
+
     }
 
     public class TwilioDateTimeConvertor : DateTimeConverterBase

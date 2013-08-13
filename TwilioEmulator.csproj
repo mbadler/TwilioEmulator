@@ -89,12 +89,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\CallsController.cs" />
+    <Compile Include="API\EmulatorControler.cs" />
     <Compile Include="API\Infrastructure\BaseController.cs" />
+    <Compile Include="API\SMSController.cs" />
     <Compile Include="Code\CallFlowEngine.cs" />
     <Compile Include="Code\Extensions\CallExtentions.cs" />
     <Compile Include="Code\Extensions\Linq2XMLExtensions.cs" />
     <Compile Include="Code\IPhoneInteractionLogger.cs" />
     <Compile Include="Code\LogSymbol.cs" />
+    <Compile Include="Code\MessageHandler\HttpLoggingMessageHandler.cs" />
+    <Compile Include="Code\Models\SMSOptions.cs" />
+    <Compile Include="Code\StringEventArgs.cs" />
     <Compile Include="Code\TwilioCallStatuses.cs" />
     <Compile Include="Offices\CallInstance.cs" />
     <Compile Include="Code\CallStatusWebClient.cs">
