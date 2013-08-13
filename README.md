@@ -8,16 +8,26 @@ The goal is to emulate most of Twilio's functions - including Call control API a
 
 ![Main Screen](https://raw.github.com/mbadler/TwilioEmulator/master/ScreenShots/MainScreen.png)
 
+
+__Latest Change__
+
+August 12:
+  - New Http Log Tab , Shows requests received to the API at a Http Level and the results.
+  - SMS supported , SMS Api calls and SMS verb in Twiml.
+  - Ground work for inbound calls and Emulator control API.
+
 Current Status:
 --------------
 
   - Functionality is currently fully implemeted for Outbound calls.
+  - SMS implemented.
+ 
+__Planning__  
   - Starting to work on inbound calls
   - Planning for Full Phone number purchasing API
 
 Down the road:
 ---------------
-- SMS
 - Call list API
 - Multiple Phones
 - Script phone clients (that respond with scripted digits)
@@ -41,6 +51,14 @@ Incoming phone calls:
 Incoming phone calls are being worked on now. Currently any call from the touchpad will go to the default Incoming Phone Number and the default Voice URL.
 You specify the defualt number and url in the configuration file or by calling the `AddIncomingPhoneNumber` API call
 
+
+Outbound SMS Support
+--------------------
+When a application calls one of the SMS API's (SMS or ShortCode) or returns the SMS verb in Twiml a message is displayed on the phonelog
+If a callback was included then the callback is called , The twiml verb can also include a action parameter that will request new
+TWiml and execute that.
+
+SMS request will alwys return `SmsStatus=sent`
 
 Twiml Verbs Support:
 -------------------------------
@@ -72,6 +90,7 @@ The following API Calls are currently supported or are planned:
 | `GetCall` | GET /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid} | Implemeted |
 | `HangupCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}  "Status" | Impleneted (only Status=completed) |
 | `RedirectCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid} "URL" | Implemented |
+| `SendSmsMessage` | POST /2010-04-01/Accounts/{AccountSid}/SMS/Messages | Implemented |
 | `AddIncomingPhoneNumber` | POST 2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers | Planning |
 
 
