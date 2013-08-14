@@ -9,21 +9,22 @@ The goal is to emulate most of Twilio's functions - including Call control API a
 ![Main Screen](https://raw.github.com/mbadler/TwilioEmulator/master/ScreenShots/MainScreen.png)
 
 
-__Latest Change__
+__Latest Changes__
 
-August 12:
-  - New Http Log Tab , Shows requests received to the API at a Http Level and the results.
-  - SMS supported , SMS Api calls and SMS verb in Twiml.
-  - Ground work for inbound calls and Emulator control API.
+[Previous Changes](https://github.com/mbadler/TwilioEmulator/edit/master/README.md#change-log)
+
+August 13
+  - Inbound calls from the dial pad now work - click on the dial button on the pad and the call will start, specify the voiceurl in the settings 
+
 
 Current Status:
 --------------
 
   - Functionality is currently fully implemeted for Outbound calls.
   - SMS implemented.
+  - Basic Incoming Call Support
  
 __Planning__  
-  - Starting to work on inbound calls
   - Planning for Full Phone number purchasing API
 
 Down the road:
@@ -48,7 +49,7 @@ The phone can be set to Machine mode and the `IfMachine` parameter is honored
 
 Incoming phone calls:
 ----------------------
-Incoming phone calls are being worked on now. Currently any call from the touchpad will go to the default Incoming Phone Number and the default Voice URL.
+Incoming phone calls are being work. Currently any call from the touchpad will go to the default Incoming Phone Number and the default Voice URL.
 You specify the defualt number and url in the configuration file or by calling the `AddIncomingPhoneNumber` API call
 
 
@@ -137,4 +138,8 @@ __Manual Phone Statuses:__
 The twilio rest client has the address to the twilio servers hard coded. To acess the emulator on local host you can use the TwilioTestClient.cs class which uses reflection to change the underlying address
 
   
-Updated 7/1/2013
+##change log##
+August 12:
+  - New Http Log Tab , Shows requests received to the API at a Http Level and the results.
+  - SMS supported , SMS Api calls and SMS verb in Twiml.
+  - Ground work for inbound calls and Emulator control API.
