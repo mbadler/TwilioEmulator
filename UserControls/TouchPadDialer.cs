@@ -8,14 +8,31 @@ using System.Text;
 using System.Windows.Forms;
 using TwilioEmulator.Phones;
 using TwilioEmulator.Code;
+using TwilioEmulator.Properties;
 
 namespace TwilioEmulator
 {
     public partial class TouchPadDialer : UserControl, IPhoneManager, IPhone
     {
+
+        private string outgoingPhoneNumber = "";
         public TouchPadDialer()
         {
             InitializeComponent();
+            SystemController.Instance.Office.IncomingPhoneNumberChanged += new EventHandler<StringEventArgs>(Office_IncomingPhoneNumberChanged);
+            SystemController.Instance.Office.OutgoingPhoneNumberChanged += new EventHandler<StringEventArgs>(Office_OutgoingPhoneNumberChanged);
+        }
+
+        void Office_IncomingPhoneNumberChanged(object sender, StringEventArgs e)
+        {
+            outgoingPhoneNumber = e.value;
+            ResetPhone();
+             
+        }
+
+        void Office_OutgoingPhoneNumberChanged(object sender, StringEventArgs e)
+        {
+            PhoneNumber = e.value;
         }
 
 
@@ -127,7 +144,7 @@ namespace TwilioEmulator
         private void ResetPhone()
         {
             btnStatus.BackColor = Color.Transparent;
-            btnStatus.Text = "Dial Number";
+            btnStatus.Text = "Dial Number ("+outgoingPhoneNumber+")";
         }
 
         
@@ -149,7 +166,7 @@ namespace TwilioEmulator
         {
             if (PhoneStatus == PhoneStatus.Talking || PhoneStatus == PhoneStatus.Ringing)
             {
-                MessageBox.Show("There currently is a phone call in progress - please end it before changeing statuses");
+                MessageBox.Show("There currently is a phone call in progress - please end it before changing statuses");
                 return;
             }
             
@@ -216,8 +233,10 @@ namespace TwilioEmulator
                     }
                 case PhoneStatus.ReadyHuman:
                     {
+                        SystemController.Instance.Office.PhoneDialingIn( Settings.Default.DefaultFromNumber,outgoingPhoneNumber);
                         break;
                     }
+                
             }
         }
 
@@ -276,18 +295,8 @@ namespace TwilioEmulator
 
 
 
-       
+        public string PhoneNumber { get; set; }
 
-        string IPhone.PhoneNumber
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        
     }
 }

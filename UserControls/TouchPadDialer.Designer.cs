@@ -273,7 +273,7 @@
             this.btnStatus.Name = "btnStatus";
             this.btnStatus.Size = new System.Drawing.Size(539, 60);
             this.btnStatus.TabIndex = 0;
-            this.btnStatus.Text = "Dial Number (1-234-567-8901)";
+            this.btnStatus.Text = "Dial Number";
             this.btnStatus.UseVisualStyleBackColor = true;
             this.btnStatus.Click += new System.EventHandler(this.btnStatus_Click);
             // 

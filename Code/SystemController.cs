@@ -140,7 +140,8 @@ namespace TwilioEmulator.Code
             Office.Startup();
             this.DefaultPhoneNumber = Settings.Default.DefaultFromNumber;
             Office.DefaultNumber.PhoneNumber = Settings.Default.DefaultIncomingPhoneNumber;
-            Office.DefaultNumber.VoiceUrl = Settings.Default.DefaultVoiceURL; 
+            Office.DefaultNumber.VoiceUrl = Settings.Default.DefaultVoiceURL;
+            Office.DefualtNumberUpdated();
             
         }
 

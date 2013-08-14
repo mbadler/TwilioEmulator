@@ -27,22 +27,28 @@ namespace TwilioEmulator.Offices
 
         public CallInstance NewCallRequest(CallOptions co)
         {
+            return CreateACall(co,false);
+        }
+
+        private CallInstance CreateACall(CallOptions co,bool IsInbound)
+        {
             CallInstance c = new CallInstance()
             {
+
                 CallForCreate = new Call()
                 {
                     Sid = CreateSid(),
                     Status = TwilioCallStatuses.QUEUED,
-                    Direction = "outbound-api",
+                    Direction = IsInbound?"inbound":"outbound-api",
                     DateCreated = DateTime.Now.ToUniversalTime(),
                     DateUpdated = DateTime.Now.ToUniversalTime(),
                     To = co.To,
                     From = co.From
-                    
+
                 },
-                CallDirection = CallDirection.Out,
+                CallDirection = IsInbound?CallDirection.Out: CallDirection.Out,
                 CallOptions = co
-               
+
             };
 
             CallList.Add(c);
@@ -60,6 +66,13 @@ return Guid.NewGuid().ToString().Replace("-", "");
         }
         #endregion
 
+        public void DefualtNumberUpdated()
+        {
+            if (IncomingPhoneNumberChanged != null)
+            {
+                IncomingPhoneNumberChanged(this, new StringEventArgs(DefaultNumber.PhoneNumber));
+            }
+        }
 
 
         protected override void Process()
@@ -94,7 +107,7 @@ return Guid.NewGuid().ToString().Replace("-", "");
             
         }
 
-        
+ #region Phone Interations       
 
         private void ProcessCallPhone(CallInstance ci)
         {
@@ -252,6 +265,14 @@ return Guid.NewGuid().ToString().Replace("-", "");
 
         public void PhoneDialingIn(string FromPhoneNumber, string toPhoneNumber)
         {
+            var v = new CallOptions()
+            {
+                From = FromPhoneNumber,
+                To = toPhoneNumber,
+                StatusCallback = DefaultNumber.StatusCallback,
+                Url = DefaultNumber.VoiceUrl
+            };
+            CreateACall(v, true);
 
         }
 
@@ -269,6 +290,13 @@ return Guid.NewGuid().ToString().Replace("-", "");
 
         }
 
+        public void SayToPhone(CallInstance ci, string Word)
+        {
+            SystemController.Instance.PhoneManager.SayReceived(ci.CallOptions.To, Word);
+        }
+
+
+ #endregion
 
         protected string SendCallEndStatus(CallInstance ci, NameValueCollection nvc,string Reason)
         {
@@ -300,10 +328,7 @@ return Guid.NewGuid().ToString().Replace("-", "");
             return a;
         }
 
-        public void SayToPhone(CallInstance ci, string Word)
-        {
-            SystemController.Instance.PhoneManager.SayReceived(ci.CallOptions.To, Word);
-        }
+       
         
         #region Search Phone List
         public CallInstance GetCallInstanceFromPhoneNumber(string phonenumber)
@@ -321,7 +346,7 @@ return Guid.NewGuid().ToString().Replace("-", "");
 #endregion
         #region Events
         public event EventHandler<StringEventArgs> IncomingPhoneNumberChanged;
-
+        public event EventHandler<StringEventArgs> OutgoingPhoneNumberChanged;
 
         #endregion
         #region SMS
