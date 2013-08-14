@@ -11,7 +11,7 @@ The goal is to emulate most of Twilio's functions - including Call control API a
 
 __Latest Changes__
 
-[Previous Changes](https://github.com/mbadler/TwilioEmulator/edit/master/README.md#change-log)
+[Previous Changes](https://github.com/mbadler/TwilioEmulator/README.md#change-log)
 
 August 13
   - Inbound calls from the dial pad now work - click on the dial button on the pad and the call will start, specify the voiceurl in the settings 
