@@ -89,7 +89,32 @@ namespace TwilioEmulator
                  );
 
                 tn.EnsureVisible();
+
+                // figure out if we need to change anythign on the call list log
+                if (logObject.CallInstance != null)
+                {
+                    // this is a phone call
+                    // find the call node by callsid
+                    var v = trvCallView.Nodes.Find(logObject.CallInstance.CallForGet.Sid,true).FirstOrDefault();
+                    if (v == null)
+                    {
+                        v = CreateNewCallListEntry(logObject.CallInstance);
+                    }
+                    ApplyImageToNode(logObject.CallInstance, v);
+                    var cInst = logObject.CallInstance.CallForGet;
+                    v.Text = logObject.CallInstance.CallDirection + " " + cInst.From + " -> " + cInst.To + " : " + cInst.Status;
+                }
             }));
+        }
+
+        private TreeNode CreateNewCallListEntry(CallInstance cInst)
+        {
+            var cll = cInst.CallForGet;
+            TreeNode tn = new TreeNode(cInst.CallDirection + " " + cll.From + " -> " + cll.To);
+            tn.BackColor = cInst.CallColor;
+            tn.Name = cll.Sid;
+            trvCallView.Nodes.Add(tn);
+            return tn;
         }
 
         private void lblServerHeader_Click(object sender, EventArgs e)
@@ -97,7 +122,50 @@ namespace TwilioEmulator
 
         }
 
-        
+        public void ApplyImageToNode(CallInstance cInst, TreeNode tn)
+        {
+            
+            var multip = 0;
+            switch (cInst.CallForGet.Status )
+            {
+                case "queued":
+                    {
+                    multip = 0;
+                        break;
+                    }
+                     case "ringing":
+                    {
+                        multip = 1;
+                        break;
+                    }
+                      case "in-progress":
+                    {
+                    multip = 2;
+                        break;
+                    }
+                      case "completed":
+                    {
+                    multip = 3;
+                        break;
+                    }
+                default:
+                    {
+                    multip = 4;
+                        break;
+                    }
+
+
+            };
+
+           
+       
+
+
+       multip = multip+ (cInst.CallDirection == CallDirection.Out ? 0 : 5);
+       tn.ImageIndex = multip;
+       tn.SelectedImageIndex = multip;
+       tn.StateImageIndex = multip;
+        }
 
 
         #region Header Managment
@@ -152,6 +220,11 @@ internal void ControlerCreated()
             DisplayIncomingPhonenumber();
         }
         #endregion
+
+        private void touchPadDialer1_Load(object sender, EventArgs e)
+        {
+
+        }
 
 
 

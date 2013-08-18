@@ -150,6 +150,7 @@
   <ItemGroup>
     <Folder Include="Dialogs\" />
     <Folder Include="ImageListImages\" />
+    <Folder Include="Images\CallListIcons\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

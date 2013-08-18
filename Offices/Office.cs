@@ -46,7 +46,7 @@ namespace TwilioEmulator.Offices
                     From = co.From
 
                 },
-                CallDirection = IsInbound?CallDirection.Out: CallDirection.Out,
+                CallDirection = IsInbound?CallDirection.In: CallDirection.Out,
                 CallOptions = co
 
             };
@@ -98,12 +98,16 @@ return Guid.NewGuid().ToString().Replace("-", "");
                 ProcessCallPhone(ci);
             }
 
-            if (ci.CallStatus == CallStatus.ReadyForProcessing)
+            if (ci.CallStatus == CallStatus.ReadyForProcessing || 
+                (ci.CallStatus == CallStatus.Queued && ci.CallDirection == CallDirection.In))
             {
                 // we are processing twiml
+                ci.CallStatus = CallStatus.ReadyForProcessing;
+                ci.CallForSet.Status = TwilioCallStatuses.INPROGRESS;
                 ci.FlowEngine.StartCallFlow();
-
             }
+
+            
             
         }
 
@@ -119,14 +123,8 @@ return Guid.NewGuid().ToString().Replace("-", "");
 
             
             var c = ci.CallForGet;
+          
             var v = SystemController.Instance.PhoneManager.AttemptDial(ci.CallForGet.To);
-                 SystemController.Instance.Logger.LogObj(new  LogObj()
-            {
-                Caption = "Dial to Phone",
-                LogSymbol = LogSymbol.TwilioToPhone,
-                CallInstance = ci
-
-            }.AddNode("Incoming Number", ci.CallOptions.To).AddNode("Phone Status", v.ToString()));
             switch (v)
             {
 
@@ -155,6 +153,9 @@ return Guid.NewGuid().ToString().Replace("-", "");
                 default:
                     break;
             }
+
+           
+
             // if it is not a good call send back a error call status and mark the call done
             // else mark it as waiting for the phone
             if (!Callok)
@@ -165,8 +166,17 @@ return Guid.NewGuid().ToString().Replace("-", "");
             else
             {
                 ci.CallStatus = CallStatus.WaitingRinging;
+                ci.CallForGet.Status = TwilioCallStatuses.RINGING;
             }
-            
+
+             
+            SystemController.Instance.Logger.LogObj(new LogObj()
+            {
+                Caption = "Dial to Phone",
+                LogSymbol = LogSymbol.TwilioToPhone,
+                CallInstance = ci
+
+            }.AddNode("Incoming Number", ci.CallOptions.To).AddNode("Phone Status", v.ToString()));
         }
 
         public void PhoneHungUp(string phonenumber)
@@ -194,14 +204,16 @@ return Guid.NewGuid().ToString().Replace("-", "");
             Task.Factory.StartNew(() =>
                 {
                     var a = ci.CallForSet;
-                    if (a.Status == TwilioCallStatuses.INPROGRESS)
+                    if (a.Status == TwilioCallStatuses.INPROGRESS || a.Status== TwilioCallStatuses.QUEUED)
                     {
                         a.EndTime = DateTime.Now;
                         a.Duration = (DateTime.Now - a.DateCreated).Seconds;
+                        a.Status = TwilioCallStatuses.COMPLETED;
                     }
 
                     ci.AbortCallFlow();
-                    a.Status = TwilioCallStatuses.COMPLETED;
+               
+                    
                     ci.CallStatus = CallStatus.Ended;
 
 
@@ -225,14 +237,9 @@ return Guid.NewGuid().ToString().Replace("-", "");
         {
             // find the ci with that phone number
             var a = GetCallInstanceFromPhoneNumber(phonenumber);
-            var v = new LogObj()
-            {
-                Caption = "^ Phone Picked Up " + (IsMachine ? " Machine" : ""),
-                LogSymbol = LogSymbol.PhoneToTwilio,
-                CallInstance = a
-            };
+            
 
-            SystemController.Instance.Logger.LogObj(v);
+          
 
             if (a.CallOptions.IfMachine != "")
             {
@@ -259,7 +266,13 @@ return Guid.NewGuid().ToString().Replace("-", "");
             a.CallStatus = CallStatus.ReadyForProcessing;
             a.CallForSet.Status = TwilioCallStatuses.INPROGRESS;
             //ProcessDoTwimlRequest(a, a.CallOptions.Url, "Get Welcome message Twiml");
-
+            var v = new LogObj()
+            {
+                Caption = "^ Phone Picked Up " + (IsMachine ? " Machine" : ""),
+                LogSymbol = LogSymbol.PhoneToTwilio,
+                CallInstance = a
+            };
+            SystemController.Instance.Logger.LogObj(v);
         }
 
 
