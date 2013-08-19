@@ -11,10 +11,12 @@ The goal is to emulate most of Twilio's functions - including Call control API a
 
 __Latest Changes__
 
-[Previous Changes](https://github.com/mbadler/TwilioEmulator/README.md#change-log)
+[Previous Changes](https://github.com/mbadler/TwilioEmulator/blob/master/README.md#change-log)
 
-August 13
-  - Inbound calls from the dial pad now work - click on the dial button on the pad and the call will start, specify the voiceurl in the settings 
+
+August 18
+  - Call history log window Added - show the history and stauses of all calls
+  - Accurate call status for inbound calls
 
 
 Current Status:
@@ -77,7 +79,7 @@ The following Twiml are planned for support :
 | `Hangup` | Implemented | Hang up the call | |
 | `Redirect` | Implemented | Redirect call flow to a different TwiML document. | |
 | `Pause` | Implemented | Wait before executing more instructions | |
-| `Reject` | | Decline an incoming call without being billed. | |
+| `Reject` | In Progress | Decline an incoming call without being billed. | |
 
 
 API Call Support
@@ -139,6 +141,10 @@ The twilio rest client has the address to the twilio servers hard coded. To aces
 
   
 ##change log##
+August 13
+  - Inbound calls from the dial pad now work - click on the dial button on the pad and the call will start, specify the voiceurl in the settings 
+
+
 August 12:
   - New Http Log Tab , Shows requests received to the API at a Http Level and the results.
   - SMS supported , SMS Api calls and SMS verb in Twiml.
