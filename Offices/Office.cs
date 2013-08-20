@@ -10,6 +10,7 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Threading.Tasks;
 using TwilioEmulator.Code.Models;
+using System.Text.RegularExpressions;
 
 namespace TwilioEmulator.Offices
 {
@@ -42,6 +43,7 @@ namespace TwilioEmulator.Offices
                     Direction = IsInbound?"inbound":"outbound-api",
                     DateCreated = DateTime.Now.ToUniversalTime(),
                     DateUpdated = DateTime.Now.ToUniversalTime(),
+                    
                     To = co.To,
                     From = co.From
 
@@ -102,6 +104,7 @@ return Guid.NewGuid().ToString().Replace("-", "");
                 (ci.CallStatus == CallStatus.Queued && ci.CallDirection == CallDirection.In))
             {
                 // we are processing twiml
+                ci.CallForSet.StartTime = DateTime.Now.ToUniversalTime();
                 ci.CallStatus = CallStatus.ReadyForProcessing;
                 ci.CallForSet.Status = TwilioCallStatuses.INPROGRESS;
                 ci.FlowEngine.StartCallFlow();
@@ -123,7 +126,7 @@ return Guid.NewGuid().ToString().Replace("-", "");
 
             
             var c = ci.CallForGet;
-          
+            c.StartTime =  DateTime.Now.ToUniversalTime();
             var v = SystemController.Instance.PhoneManager.AttemptDial(ci.CallForGet.To);
             switch (v)
             {
@@ -206,9 +209,17 @@ return Guid.NewGuid().ToString().Replace("-", "");
                     var a = ci.CallForSet;
                     if (a.Status == TwilioCallStatuses.INPROGRESS || a.Status== TwilioCallStatuses.QUEUED)
                     {
-                        a.EndTime = DateTime.Now;
-                        a.Duration = (DateTime.Now - a.DateCreated).Seconds;
+                        a.EndTime = DateTime.Now.ToUniversalTime();
+                        a.Duration = Convert.ToInt32((a.EndTime.Value - a.DateCreated).TotalSeconds);
                         a.Status = TwilioCallStatuses.COMPLETED;
+                        // set the price on the call
+                        var nummins = Convert.ToInt32(Math.Floor( (a.EndTime.Value - ci.CallForGet.StartTime).Value.TotalMinutes)) +1;
+                        var price = 2.0; //default to outbound
+                        if (a.Direction == "inbound")
+                        {
+                            price = Regex.IsMatch(a.To,@"1(\s?|-?)800(\s?|-?)\d{3}(\s?|-?)\d{4}")?4:1;
+                        }
+                        a.Price =  (decimal)price * (decimal)nummins;
                     }
 
                     ci.AbortCallFlow();
@@ -223,6 +234,8 @@ return Guid.NewGuid().ToString().Replace("-", "");
                         HangUpThePhoneConnectionFromTheserver(ci, reason);
                     }
                     SendCallEndStatus(ci, ci.GenerateCallBackValue(), reason);
+                   
+
                 });
         }
 
