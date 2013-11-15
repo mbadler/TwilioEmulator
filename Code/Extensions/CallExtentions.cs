@@ -18,7 +18,8 @@ namespace TwilioEmulator.Code.Extensions
                 {"CallSid",call.Sid},
                 {"CallStatus",call.Status},
                 {"From",call.From},
-                {"To",call.To}
+                {"To",call.To},
+                {"Direction",call.Direction}
             };
             if (c.Digits != "")
             {

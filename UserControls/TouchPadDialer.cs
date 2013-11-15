@@ -145,6 +145,7 @@ namespace TwilioEmulator
         {
             btnStatus.BackColor = Color.Transparent;
             btnStatus.Text = "Dial Number ("+outgoingPhoneNumber+")";
+            PhoneNumber = outgoingPhoneNumber;
         }
 
         
@@ -282,8 +283,8 @@ namespace TwilioEmulator
         {
             phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Say, SystemColors.Desktop, lblBuffer.Text.Replace("Buffer: ",""));
             tmrDial.Enabled = false;
-           
-            SystemController.Instance.Office.PhoneSendingDigits(currentPhoneNum, lblBuffer.Text.Replace("Buffer: ", ""));
+
+            SystemController.Instance.Office.PhoneSendingDigits(PhoneNumber, lblBuffer.Text.Replace("Buffer: ", ""));
          lblBuffer.Text = "";
             lblBuffer.Visible = false;
         }

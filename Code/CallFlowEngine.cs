@@ -15,11 +15,31 @@ namespace TwilioEmulator.Code
         public XDocument Twiml { get; set; }
         public CallInstance MyCall { get; set; }
 
-        public string TwimlPath = "";
+
+        public string _twimlPath = "";
+        public string TwimlPath
+        {
+            get
+            {
+                return _twimlPath;
+            }
+            set
+            {
+                if (value == "" || _twimlPath == "")
+                {
+                    _twimlPath = value;
+                    return;
+                }
+
+                _twimlPath = new Uri(new Uri(_twimlPath), value).AbsoluteUri;
+            }
+        }
         public string TwimlLogAs = "";
 
         public XElement GatherNode = null;
         public XElement CurrentNode = null;
+
+        public string CurrentUrl = "";
 
         public Thread thread = null;
 
@@ -199,7 +219,7 @@ namespace TwilioEmulator.Code
 
         private void DoTwimlRequest( string UrlToUse, string LogAs)
         {
-            
+            CurrentUrl = UrlToUse;
             var a = "";
             var nvc = MyCall.GenerateCallBackValue();
             var v = new LogObj()

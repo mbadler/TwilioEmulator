@@ -52,7 +52,7 @@ namespace TwilioEmulator.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://127.0.0.1:51095/ConnectCallBack")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:64741/calls/callstart")]
         public string DefaultVoiceURL {
             get {
                 return ((string)(this["DefaultVoiceURL"]));
