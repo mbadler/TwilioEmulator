@@ -234,6 +234,11 @@ namespace TwilioEmulator
                     }
                 case PhoneStatus.ReadyHuman:
                     {
+                        btnStatus.Text = "Talking (Hang Up)";
+                        btnStatus.BackColor = Color.PowderBlue;
+                        PhoneStatus = PhoneStatus.Talking;
+                        phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Pickup, SystemColors.Desktop, "");
+                        currentPhoneNum = outgoingPhoneNumber;
                         SystemController.Instance.Office.PhoneDialingIn( Settings.Default.DefaultFromNumber,outgoingPhoneNumber);
                         break;
                     }

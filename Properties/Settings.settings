@@ -14,5 +14,8 @@
     <Setting Name="DefaultVoiceURL" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://localhost:64741/calls/callstart</Value>
     </Setting>
+    <Setting Name="StatusCallBackUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost:64741/calls/callstatus</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

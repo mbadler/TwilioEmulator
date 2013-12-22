@@ -11,6 +11,7 @@ using System.Net;
 using System.Threading.Tasks;
 using TwilioEmulator.Code.Models;
 using System.Text.RegularExpressions;
+using TwilioEmulator.Properties;
 
 namespace TwilioEmulator.Offices
 {
@@ -33,9 +34,17 @@ namespace TwilioEmulator.Offices
 
         private CallInstance CreateACall(CallOptions co,bool IsInbound)
         {
+
+            // preassign some info to the call if it has not already been specified
+            if ( co.StatusCallback == null)
+            {
+                co.StatusCallback = Settings.Default.StatusCallBackUrl;
+            }
+            
             CallInstance c = new CallInstance()
             {
 
+                
                 CallForCreate = new Call()
                 {
                     Sid = CreateSid(),
@@ -45,11 +54,15 @@ namespace TwilioEmulator.Offices
                     DateUpdated = DateTime.Now.ToUniversalTime(),
                     
                     To = co.To,
-                    From = co.From
+                    From = co.From,
+                    
+                    
 
                 },
                 CallDirection = IsInbound?CallDirection.In: CallDirection.Out,
-                CallOptions = co
+                CallOptions = co,
+
+                
 
             };
 
@@ -333,7 +346,7 @@ return Guid.NewGuid().ToString().Replace("-", "");
             {
                 LogSymbol = LogSymbol.TwilioToWeb,
                 CallInstance = ci,
-                Caption = "Call End Status to " + ci.CallBackurl+ " "+Reason 
+                Caption = "Call End Status to " + ci.CallOptions.StatusCallback + " " + Reason 
             };
 
 
@@ -346,7 +359,7 @@ return Guid.NewGuid().ToString().Replace("-", "");
             }
             catch (Exception ex)
             {
-                v.Caption = "<- Exception on Call Start Call Back to " + ci.CallBackurl+ex.Message ;
+                v.Caption = "<- Exception on Call Start Call Back to " + ci.CallOptions.StatusCallback + ex.Message;
                 v.AddException(ex);
             }
             SystemController.Instance.Logger.LogObj(v);

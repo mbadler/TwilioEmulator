@@ -58,5 +58,14 @@ namespace TwilioEmulator.Properties {
                 return ((string)(this["DefaultVoiceURL"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:64741/calls/callstatus")]
+        public string StatusCallBackUrl {
+            get {
+                return ((string)(this["StatusCallBackUrl"]));
+            }
+        }
     }
 }
