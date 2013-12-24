@@ -14,6 +14,11 @@ __Latest Changes__
 [Previous Changes](https://github.com/mbadler/TwilioEmulator/blob/master/README.md#change-log)
 
 
+Connecting from your application
+--------------------------------
+The standard Twilio client does not allow for connections other than the real twilio service. It also forces you to provide the credentials every time you create the client. I have created a companion project called [TwilioDotConfig] (https://github.com/mbadler/TwilioDotConfig) that provides for web/app.config settings to auto configure and redirect the standard twilio client.
+
+
 August 18
   - Call history log window Added - show the history and stauses of all calls
   - Accurate call status for inbound calls
