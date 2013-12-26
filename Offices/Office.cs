@@ -352,6 +352,7 @@ return Guid.NewGuid().ToString().Replace("-", "");
 
             try
             {
+                nvc.Add("CallDuration", (DateTime.Now.ToUniversalTime() - ci.CallForGet.StartTime.Value).TotalSeconds.ToString());
                 v.AddNode("Request", nvc);
                  a = ci.BrowserClient.DoRequest(ci.CallOptions.StatusCallback, nvc);
                 v.AddNode("Response", a);
