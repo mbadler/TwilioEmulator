@@ -272,6 +272,7 @@ namespace TwilioEmulator.Code
             VerbFunctions.Add(Say);
             VerbFunctions.Add(Play);
             VerbFunctions.Add(SMS);
+            VerbFunctions.Add(Reject);
         }
 
         protected TwimlVerbResult SMS(XElement twimnode)
@@ -361,6 +362,13 @@ namespace TwilioEmulator.Code
         protected TwimlVerbResult Hangup(XElement twimnode)
         {
             SystemController.Instance.Office.MarkCallEnded(this.MyCall, "FromTwiml",true);
+            return TwimlVerbResult.EndCall;
+
+        }
+
+        protected TwimlVerbResult Reject(XElement twimnode)
+        {
+            SystemController.Instance.Office.MarkCallEnded(this.MyCall,"TwimlReject", true);
             return TwimlVerbResult.EndCall;
 
         }
