@@ -11,6 +11,12 @@ The goal is to emulate most of Twilio's functions - including Call control API a
 
 __Latest Changes__
 
+
+January 10/2014
+  - You can script call responses form te scripting tab
+  - Twiml displayed in the Call log
+  - Double clik on a call log node for more details.
+  - 
 [Previous Changes](https://github.com/mbadler/TwilioEmulator/blob/master/README.md#change-log)
 
 
@@ -19,9 +25,7 @@ Connecting from your application
 The standard Twilio client does not allow for connections other than the real twilio service. It also forces you to provide the credentials every time you create the client. I have created a companion project called [TwilioDotConfig] (https://github.com/mbadler/TwilioDotConfig) that provides for web/app.config settings to auto configure and redirect the standard twilio client.
 
 
-August 18
-  - Call history log window Added - show the history and stauses of all calls
-  - Accurate call status for inbound calls
+
 
 
 Current Status:
@@ -30,6 +34,7 @@ Current Status:
   - Functionality is currently fully implemeted for Outbound calls.
   - SMS implemented.
   - Basic Incoming Call Support
+  - Basic Scripting Ability
  
 __Planning__  
   - Planning for Full Phone number purchasing API
@@ -100,6 +105,21 @@ The following API Calls are currently supported or are planned:
 | `RedirectCall` | POST /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid} "URL" | Implemented |
 | `SendSmsMessage` | POST /2010-04-01/Accounts/{AccountSid}/SMS/Messages | Implemented |
 | `AddIncomingPhoneNumber` | POST 2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers | Planning |
+
+
+Scripting (very early beta)
+---------------------------
+
+You can do basic script reponses to (outbound only for now) phone calls. On the script tag fill in the script - the script will be saved to script.txt as you type
+
+Currenly supported script commands
+
+| Script Command | Description | Example |
+| --- | --- | --- |
+| `WaitFor` | Waits for the specified text to be sent from the server (only with a twiml SAY not a PLAY. If the text is sourounded by braces {} it will be matched using regex | `WaitFor:Press 1 to continue` |
+| `Wait` | Waits the sepcified number of seconds before moving on to the next instruction | `Wait:2` |
+| `Digits` | Sends the sepcified digets back to the server as if it were enterd on the key pad | `Digits:1212#` |
+
 
 
 #### Concurrent Phone Calls: ####
