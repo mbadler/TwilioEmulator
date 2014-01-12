@@ -187,6 +187,7 @@ namespace TwilioEmulator
             this.trvLog.Name = "trvLog";
             this.trvLog.Size = new System.Drawing.Size(578, 230);
             this.trvLog.TabIndex = 1;
+            this.trvLog.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.trvLog_NodeMouseDoubleClick);
             // 
             // label5
             // 
@@ -197,7 +198,7 @@ namespace TwilioEmulator
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(578, 14);
             this.label5.TabIndex = 2;
-            this.label5.Text = "API Log";
+            this.label5.Text = "API Log (double click node for more details)";
             // 
             // tabPage2
             // 

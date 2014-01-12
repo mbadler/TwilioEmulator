@@ -248,7 +248,7 @@ namespace TwilioEmulator.Code
             try
             {
                 Twiml = XDocument.Parse(a);
-                v.AddNode("Twiml:",Twiml.Nodes().Count().ToString()+ " Nodes");
+                v.AddNode("Twiml:",a);
             }
             catch (Exception ex)
             {
@@ -416,10 +416,18 @@ namespace TwilioEmulator.Code
                 MyCall.Digits = MyCall.Digits.Substring(0,MyCall.Digits.Count()-1);
             }
 
+            if (MyCall.Digits.Count() > numDigits)
+            {
+                MyCall.Digits = MyCall.Digits.Substring(0, numDigits);
+            }
+
             if (MyCall.Digits != "")
             {
                 TwimlPath = action;
             }
+
+
+
             return MyCall.Digits == "" ? TwimlVerbResult.Continue : TwimlVerbResult.Redirect;
         }
 

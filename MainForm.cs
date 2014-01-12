@@ -10,6 +10,7 @@ using TwilioEmulator.Code;
 using TwilioEmulator.Phones;
 using System.Collections.Specialized;
 using TwilioEmulator.Offices;
+using TwilioEmulator.Dialogs;
 
 namespace TwilioEmulator
 {
@@ -30,7 +31,7 @@ namespace TwilioEmulator
 
             this.lblServerHeader.Text = "Emulator Server - Port: " + SystemController.Instance.ActivePort.ToString();
 
-            touchPadDialer1.phonelog = callInteractionLogger1;
+            touchPadDialer1.CallLogger = callInteractionLogger1;
         }
 
         
@@ -223,6 +224,18 @@ internal void ControlerCreated()
 
         private void touchPadDialer1_Load(object sender, EventArgs e)
         {
+
+        }
+
+        private void trvLog_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            var node = e.Node;
+            if (e.Node.Level > 0)
+            {
+                node = e.Node.Parent;
+            }
+
+            APIDetail.ShowNode(node);
 
         }
 

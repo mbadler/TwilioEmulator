@@ -9,11 +9,14 @@ using System.Windows.Forms;
 using TwilioEmulator.Phones;
 using TwilioEmulator.Code;
 using TwilioEmulator.Properties;
+using TwilioEmulator.Code.ScriptEngines;
+using System.IO;
 
 namespace TwilioEmulator
 {
     public partial class TouchPadDialer : UserControl, IPhoneManager, IPhone
     {
+        private ScriptRunner scrun = null;
 
         private string outgoingPhoneNumber = "";
         public TouchPadDialer()
@@ -21,6 +24,7 @@ namespace TwilioEmulator
             InitializeComponent();
             SystemController.Instance.Office.IncomingPhoneNumberChanged += new EventHandler<StringEventArgs>(Office_IncomingPhoneNumberChanged);
             SystemController.Instance.Office.OutgoingPhoneNumberChanged += new EventHandler<StringEventArgs>(Office_OutgoingPhoneNumberChanged);
+        
         }
 
         void Office_IncomingPhoneNumberChanged(object sender, StringEventArgs e)
@@ -38,14 +42,20 @@ namespace TwilioEmulator
 
         #region IPhoneManager Implements
 
-      
 
-        public IPhoneInteractionLogger phonelog = null;
+
+        public IPhoneInteractionLogger CallLogger
+        {
+            get
+            ;
+            set
+            ;
+        }
         
 
         public PhoneStatus AttemptDial(string PhoneNumber)
         {
-            phonelog.LogInteraction(InteractionWho.server, InteractionWhat.Dial, SystemColors.Desktop, PhoneNumber);
+            CallLogger.LogInteraction(InteractionWho.server, InteractionWhat.Dial, SystemColors.Desktop, PhoneNumber);
             PhoneStatus retStatus = PhoneStatus.Ringing;
 
             currentPhoneNum = PhoneNumber;
@@ -82,7 +92,7 @@ namespace TwilioEmulator
             }
 
 
-            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Pickup, SystemColors.Desktop, retStatus.ToString());
+            CallLogger.LogInteraction(InteractionWho.Phone, InteractionWhat.Pickup, SystemColors.Desktop, retStatus.ToString());
              return retStatus;
         }
 
@@ -95,12 +105,12 @@ namespace TwilioEmulator
         }
          void IPhoneManager.SayReceived(string PhoneNumber, string Text)
          {
-             phonelog.LogInteraction(InteractionWho.server, InteractionWhat.Say, SystemColors.Desktop, Text);
+             CallLogger.LogInteraction(InteractionWho.server, InteractionWhat.Say, SystemColors.Desktop, Text);
          }
 
          void IPhoneManager.SMSReceived(string FromPhoneNumber, string ToPhoneNumber, string Text)
          {
-             phonelog.LogInteraction(InteractionWho.server, InteractionWhat.SMS, Color.Green, "SMS - From:" + FromPhoneNumber + "  " + Text);
+             CallLogger.LogInteraction(InteractionWho.server, InteractionWhat.SMS, Color.Green, "SMS - From:" + FromPhoneNumber + "  " + Text);
          }
          
         #endregion 
@@ -237,7 +247,7 @@ namespace TwilioEmulator
                         btnStatus.Text = "Talking (Hang Up)";
                         btnStatus.BackColor = Color.PowderBlue;
                         PhoneStatus = PhoneStatus.Talking;
-                        phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Pickup, SystemColors.Desktop, "");
+                        CallLogger.LogInteraction(InteractionWho.Phone, InteractionWhat.Pickup, SystemColors.Desktop, "");
                         currentPhoneNum = outgoingPhoneNumber;
                         SystemController.Instance.Office.PhoneDialingIn( Settings.Default.DefaultFromNumber,outgoingPhoneNumber);
                         break;
@@ -249,8 +259,8 @@ namespace TwilioEmulator
         private void HangupPhone()
         {
             PhoneStatus = DefaultPhoneStatus;
-            SystemController.Instance.Office.PhoneHungUp(currentPhoneNum);
-            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Hangup, SystemColors.Desktop,"");
+            SystemController.Instance.Office.PhoneHungUp(outgoingPhoneNumber);
+            CallLogger.LogInteraction(InteractionWho.Phone, InteractionWhat.Hangup, SystemColors.Desktop, "");
 
         }
 
@@ -259,7 +269,7 @@ namespace TwilioEmulator
             btnStatus.Text = "Talking (Hang Up)";
             btnStatus.BackColor = Color.PowderBlue;
             PhoneStatus = PhoneStatus.Talking;
-            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Pickup, SystemColors.Desktop, "");
+            CallLogger.LogInteraction(InteractionWho.Phone, InteractionWhat.Pickup, SystemColors.Desktop, "");
             SystemController.Instance.Office.PhonePickedUp(currentPhoneNum,DefaultPhoneStatus == PhoneStatus.ReadyMachine?true:false);
             
         }
@@ -286,7 +296,7 @@ namespace TwilioEmulator
 
         private void SubmitBuffer()
         {
-            phonelog.LogInteraction(InteractionWho.Phone, InteractionWhat.Say, SystemColors.Desktop, lblBuffer.Text.Replace("Buffer: ",""));
+            CallLogger.LogInteraction(InteractionWho.Phone, InteractionWhat.Say, SystemColors.Desktop, lblBuffer.Text.Replace("Buffer: ", ""));
             tmrDial.Enabled = false;
 
             SystemController.Instance.Office.PhoneSendingDigits(PhoneNumber, lblBuffer.Text.Replace("Buffer: ", ""));
@@ -302,6 +312,63 @@ namespace TwilioEmulator
 
 
         public string PhoneNumber { get; set; }
+
+        private void tbTouchPad_TabIndexChanged(object sender, EventArgs e)
+        {
+            if (tbTouchPad.TabIndex == 0)
+            {
+                SystemController.Instance.PhoneManager = this;
+            }
+            else
+            {
+                
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (button1.Text == "Dial and start")
+            {
+                scrun = new ScriptRunner();
+                scrun.CallLogger = CallLogger;
+
+                SystemController.Instance.PhoneManager = scrun;
+                scrun.PhoneNumber = outgoingPhoneNumber;
+                scrun.InitalizeWithScript(txtScript.Text);
+                SystemController.Instance.Office.PhoneDialingIn(Settings.Default.DefaultFromNumber, outgoingPhoneNumber);
+                scrun.Run();
+                button1.Text = "Hang Up";
+            }
+            else 
+            {
+                scrun.ShouldCancel = true;
+                
+                    HangupPhone();
+               
+                button1.Text = "Dial and start";
+            }
+        }
+
+        private void TouchPadDialer_Load(object sender, EventArgs e)
+        {
+            // try to load the script into the text box 
+            if (File.Exists("Script.Txt"))
+            {
+                txtScript.Text = File.ReadAllText("Script.Txt");
+            }
+        }
+
+        private void txtScript_TextChanged(object sender, EventArgs e)
+        {
+            if (chkAutoSaveScript.Checked)
+            {
+                File.WriteAllText("Script.Txt", txtScript.Text);
+            }
+            
+        }
+
+
+
 
         
     }

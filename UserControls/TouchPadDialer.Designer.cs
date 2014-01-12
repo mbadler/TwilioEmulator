@@ -46,12 +46,18 @@
             this.btn0 = new System.Windows.Forms.Button();
             this.btnStatus = new System.Windows.Forms.Button();
             this.tbScript = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.lblBuffer = new System.Windows.Forms.Label();
             this.tmrDial = new System.Windows.Forms.Timer(this.components);
+            this.txtScript = new System.Windows.Forms.TextBox();
+            this.chkAutoSaveScript = new System.Windows.Forms.CheckBox();
             this.tbTouchPad.SuspendLayout();
             this.tbKeyPad.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.tbScript.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbTouchPad
@@ -65,6 +71,7 @@
             this.tbTouchPad.SelectedIndex = 0;
             this.tbTouchPad.Size = new System.Drawing.Size(553, 466);
             this.tbTouchPad.TabIndex = 3;
+            this.tbTouchPad.TabIndexChanged += new System.EventHandler(this.tbTouchPad_TabIndexChanged);
             // 
             // tbKeyPad
             // 
@@ -279,6 +286,8 @@
             // 
             // tbScript
             // 
+            this.tbScript.Controls.Add(this.txtScript);
+            this.tbScript.Controls.Add(this.panel1);
             this.tbScript.Location = new System.Drawing.Point(4, 22);
             this.tbScript.Name = "tbScript";
             this.tbScript.Padding = new System.Windows.Forms.Padding(3);
@@ -286,6 +295,26 @@
             this.tbScript.TabIndex = 1;
             this.tbScript.Text = "Script";
             this.tbScript.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.chkAutoSaveScript);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(539, 43);
+            this.panel1.TabIndex = 1;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(3, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(109, 34);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Dial and start";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // timer1
             // 
@@ -307,6 +336,28 @@
             this.tmrDial.Interval = 1000;
             this.tmrDial.Tick += new System.EventHandler(this.tmrDial_Tick);
             // 
+            // txtScript
+            // 
+            this.txtScript.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtScript.Location = new System.Drawing.Point(3, 46);
+            this.txtScript.Multiline = true;
+            this.txtScript.Name = "txtScript";
+            this.txtScript.Size = new System.Drawing.Size(539, 391);
+            this.txtScript.TabIndex = 2;
+            this.txtScript.TextChanged += new System.EventHandler(this.txtScript_TextChanged);
+            // 
+            // chkAutoSaveScript
+            // 
+            this.chkAutoSaveScript.AutoSize = true;
+            this.chkAutoSaveScript.Checked = true;
+            this.chkAutoSaveScript.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAutoSaveScript.Location = new System.Drawing.Point(141, 13);
+            this.chkAutoSaveScript.Name = "chkAutoSaveScript";
+            this.chkAutoSaveScript.Size = new System.Drawing.Size(154, 17);
+            this.chkAutoSaveScript.TabIndex = 1;
+            this.chkAutoSaveScript.Text = "Auto save to Script.txt";
+            this.chkAutoSaveScript.UseVisualStyleBackColor = true;
+            // 
             // TouchPadDialer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -316,9 +367,14 @@
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "TouchPadDialer";
             this.Size = new System.Drawing.Size(553, 466);
+            this.Load += new System.EventHandler(this.TouchPadDialer_Load);
             this.tbTouchPad.ResumeLayout(false);
             this.tbKeyPad.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.tbScript.ResumeLayout(false);
+            this.tbScript.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -346,5 +402,10 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label lblBuffer;
         private System.Windows.Forms.Timer tmrDial;
+      
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox txtScript;
+        private System.Windows.Forms.CheckBox chkAutoSaveScript;
     }
 }

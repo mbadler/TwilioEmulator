@@ -19,24 +19,7 @@ namespace TwilioEmulator.UserControls
 
         string WordBuffer = "";
 
-        public void LogInteraction(InteractionWho fromwho, InteractionWhat what, Color BackgroundColor, string interaction)
-        {
-            this.BeginInvoke((Action)(() =>
-            {
-            tmrBuffer.Enabled = true;
-            if (fromwho == InteractionWho.server && what == InteractionWhat.Say)
-            {
-                
-                WordBuffer = WordBuffer + " " + interaction;
-                if (WordBuffer.Length < 100)
-                {
-                    tmrBuffer.Enabled = true;
-                    return;
-                }
-            }
-            LogInteractionToLog(fromwho, what, interaction);
-           }));
-        }
+       
 
         private void LogInteractionToLog(InteractionWho fromwho, InteractionWhat what, string interaction)
         {
@@ -78,6 +61,41 @@ namespace TwilioEmulator.UserControls
         {
             richTextBox1.SelectionStart = richTextBox1.Text.Length; //Set the current caret position at the end
             richTextBox1.ScrollToCaret(); //Now scroll it automatically
+        }
+
+        void IPhoneInteractionLogger.LogInteraction(InteractionWho fromwho, InteractionWhat what, Color BackgroundColor, string interaction)
+        {
+            this.BeginInvoke((Action)(() =>
+            {
+                tmrBuffer.Enabled = true;
+                if (fromwho == InteractionWho.server && what == InteractionWhat.Say)
+                {
+
+                    WordBuffer = WordBuffer + " " + interaction;
+                    if (WordBuffer.Length < 100)
+                    {
+                        tmrBuffer.Enabled = true;
+                        return;
+                    }
+                }
+                LogInteractionToLog(fromwho, what, interaction);
+            }));
+        }
+
+        void IPhoneInteractionLogger.LogTwilioSay(string interaction)
+        {
+            this.BeginInvoke((Action)(() =>
+            {
+            LogInteractionToLog(InteractionWho.server, InteractionWhat.Say, interaction);
+           } ));
+        }
+
+        void IPhoneInteractionLogger.LogDigitPressed(string digits)
+        {
+            this.BeginInvoke((Action)(() =>
+            {
+            LogInteractionToLog(InteractionWho.Phone, InteractionWhat.Dial, digits);
+            }));
         }
     }
 }

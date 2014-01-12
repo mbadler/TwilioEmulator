@@ -100,8 +100,15 @@
     <Compile Include="Code\LogSymbol.cs" />
     <Compile Include="Code\MessageHandler\HttpLoggingMessageHandler.cs" />
     <Compile Include="Code\Models\SMSOptions.cs" />
+    <Compile Include="Code\ScriptEngines\ScriptRunner.cs" />
     <Compile Include="Code\StringEventArgs.cs" />
     <Compile Include="Code\TwilioCallStatuses.cs" />
+    <Compile Include="Dialogs\APIDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\APIDetail.Designer.cs">
+      <DependentUpon>APIDetail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Offices\CallInstance.cs" />
     <Compile Include="Code\CallStatusWebClient.cs">
       <SubType>Component</SubType>
@@ -137,7 +144,9 @@
     <Compile Include="UserControls\TouchPadDialer.Designer.cs">
       <DependentUpon>TouchPadDialer.cs</DependentUpon>
     </Compile>
-    <Compile Include="TwilioTestClient.cs" />
+    <EmbeddedResource Include="Dialogs\APIDetail.resx">
+      <DependentUpon>APIDetail.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -149,7 +158,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Dialogs\" />
     <Folder Include="ImageListImages\" />
     <Folder Include="Images\CallListIcons\" />
   </ItemGroup>
