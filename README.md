@@ -43,10 +43,11 @@ Down the road:
 ---------------
 - Call list API
 - Multiple Phones
-- Script phone clients (that respond with scripted digits)
+- Script phone clients (that respond with scripted digits) (in early beta)
 - Headless mode configurable via API call for unit testing external Twilio based applications
 - Playing voice files 
 - Using Windows TTS to play the actual `SAY` sentences so that you can approximate what the call will sound like 
+- NEW- Provided complied binaries
 
 
 How it works:
