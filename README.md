@@ -12,6 +12,11 @@ The goal is to emulate most of Twilio's functions - including Call control API a
 __Latest Changes__
 
 
+June 8/2014
+  - Requests are now signed using the AuthToken value in the config file 
+
+Note: The RequestValidator that Twilio provides has a .IsLocal opt out - in order to sumulate the request you will need to work around that code 
+
 January 10/2014
   - You can script call responses form te scripting tab
   - Twiml displayed in the Call log
