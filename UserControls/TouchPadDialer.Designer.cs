@@ -46,13 +46,13 @@
             this.btn0 = new System.Windows.Forms.Button();
             this.btnStatus = new System.Windows.Forms.Button();
             this.tbScript = new System.Windows.Forms.TabPage();
+            this.txtScript = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.chkAutoSaveScript = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.lblBuffer = new System.Windows.Forms.Label();
             this.tmrDial = new System.Windows.Forms.Timer(this.components);
-            this.txtScript = new System.Windows.Forms.TextBox();
-            this.chkAutoSaveScript = new System.Windows.Forms.CheckBox();
             this.tbTouchPad.SuspendLayout();
             this.tbKeyPad.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -296,6 +296,16 @@
             this.tbScript.Text = "Script";
             this.tbScript.UseVisualStyleBackColor = true;
             // 
+            // txtScript
+            // 
+            this.txtScript.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtScript.Location = new System.Drawing.Point(3, 46);
+            this.txtScript.Multiline = true;
+            this.txtScript.Name = "txtScript";
+            this.txtScript.Size = new System.Drawing.Size(539, 391);
+            this.txtScript.TabIndex = 2;
+            this.txtScript.TextChanged += new System.EventHandler(this.txtScript_TextChanged);
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.chkAutoSaveScript);
@@ -305,6 +315,18 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(539, 43);
             this.panel1.TabIndex = 1;
+            // 
+            // chkAutoSaveScript
+            // 
+            this.chkAutoSaveScript.AutoSize = true;
+            this.chkAutoSaveScript.Checked = true;
+            this.chkAutoSaveScript.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAutoSaveScript.Location = new System.Drawing.Point(141, 13);
+            this.chkAutoSaveScript.Name = "chkAutoSaveScript";
+            this.chkAutoSaveScript.Size = new System.Drawing.Size(154, 17);
+            this.chkAutoSaveScript.TabIndex = 1;
+            this.chkAutoSaveScript.Text = "Auto save to Script.txt";
+            this.chkAutoSaveScript.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
@@ -335,28 +357,6 @@
             // 
             this.tmrDial.Interval = 1000;
             this.tmrDial.Tick += new System.EventHandler(this.tmrDial_Tick);
-            // 
-            // txtScript
-            // 
-            this.txtScript.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtScript.Location = new System.Drawing.Point(3, 46);
-            this.txtScript.Multiline = true;
-            this.txtScript.Name = "txtScript";
-            this.txtScript.Size = new System.Drawing.Size(539, 391);
-            this.txtScript.TabIndex = 2;
-            this.txtScript.TextChanged += new System.EventHandler(this.txtScript_TextChanged);
-            // 
-            // chkAutoSaveScript
-            // 
-            this.chkAutoSaveScript.AutoSize = true;
-            this.chkAutoSaveScript.Checked = true;
-            this.chkAutoSaveScript.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAutoSaveScript.Location = new System.Drawing.Point(141, 13);
-            this.chkAutoSaveScript.Name = "chkAutoSaveScript";
-            this.chkAutoSaveScript.Size = new System.Drawing.Size(154, 17);
-            this.chkAutoSaveScript.TabIndex = 1;
-            this.chkAutoSaveScript.Text = "Auto save to Script.txt";
-            this.chkAutoSaveScript.UseVisualStyleBackColor = true;
             // 
             // TouchPadDialer
             // 

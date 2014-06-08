@@ -17,5 +17,8 @@
     <Setting Name="StatusCallBackUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://localhost:64741/calls/callstatus</Value>
     </Setting>
+    <Setting Name="AuthToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AuthToken</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

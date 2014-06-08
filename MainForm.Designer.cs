@@ -367,6 +367,7 @@ namespace TwilioEmulator
             // 
             // touchPadDialer1
             // 
+            this.touchPadDialer1.CallLogger = null;
             this.touchPadDialer1.DefaultPhoneStatus = TwilioEmulator.Phones.PhoneStatus.ReadyHuman;
             this.touchPadDialer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.touchPadDialer1.Location = new System.Drawing.Point(0, 13);
